@@ -3,14 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+  <meta name="description" content="Volunteer for Kick It In the Park — the City of Los Angeles's free community World Cup watch party program. Apply to join us at neighborhood Rec & Park sites citywide for FIFA World Cup 2026.">
   <title>Volunteer — Kick It In the Park · Los Angeles 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <style>
     :root {
       --brand:      #304FFE;
       --brand-dk:   #0A1A8A;
-      --accent:     #FF5252;
+      --accent:     #C62828;
       --yellow:     #F4FF81;
       --light:      #F4F6FB;
       --white:      #FFFFFF;
@@ -22,7 +27,7 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     section[id] { scroll-margin-top: 48px; }
-body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); background: var(--white); }
+    body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); background: var(--white); }
 
     /* ── SKIP LINK ── */
     .skip-link {
@@ -36,11 +41,12 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
     .skip-link:focus { top: 0; }
 
     /* ── FOCUS STYLES ── */
+    /* Double-ring: yellow outline visible on dark BGs; dark box-shadow gap visible on light BGs */
     :focus-visible {
       outline: 3px solid var(--yellow);
       outline-offset: 3px;
+      box-shadow: 0 0 0 6px var(--brand-dk);
     }
-    .navbar :focus-visible { outline-color: var(--yellow); }
 
     /* ── LANGUAGE BAR ── */
     .lang-bar {
@@ -52,22 +58,12 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
       flex-wrap: wrap; gap: .5rem;
     }
     .lang-controls { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; }
-    .lang-bar-label { font-size: .7rem; font-weight: 600; color: rgba(255,255,255,.5); text-transform: uppercase; letter-spacing: .8px; margin-right: .4rem; white-space: nowrap; }
+    .lang-bar-label { font-size: .7rem; font-weight: 600; color: rgba(255,255,255,.75); text-transform: uppercase; letter-spacing: .8px; margin-right: .4rem; white-space: nowrap; }
     .lang-btn { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15); color: rgba(255,255,255,.85); font-size: .75rem; font-weight: 600; padding: .3rem .7rem; border-radius: 5px; cursor: pointer; transition: all .15s; font-family: inherit; display: inline-flex; align-items: center; gap: .35rem; text-decoration: none; }
     .lang-btn:hover, .lang-btn:focus { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.35); }
     .lang-btn.active { background: var(--yellow); color: var(--brand-dk); border-color: var(--yellow); font-weight: 700; }
-    .lang-more-wrap { position: relative; display: inline-block; }
-    .lang-more { background: none; border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.6); font-size: .7rem; font-weight: 600; padding: .3rem .7rem; border-radius: 5px; cursor: pointer; font-family: inherit; transition: all .15s; }
-    .lang-more:hover { color: #fff; border-color: rgba(255,255,255,.4); }
-    .lang-dropdown { display: none; position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--brand-dk); border: 1px solid rgba(255,255,255,.2); border-radius: 8px; padding: 8px; min-width: 160px; z-index: 600; max-height: 240px; overflow-y: auto; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
-    .lang-dropdown.open { display: block; }
-    .lang-dropdown button { display: block; width: 100%; text-align: left; background: none; border: none; color: rgba(255,255,255,.8); font-size: .78rem; font-weight: 500; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-family: inherit; }
-    .lang-dropdown button:hover { background: rgba(255,255,255,.12); color: #fff; }
     .btn-nav { background: var(--accent); color: #fff; font-weight: 700; font-size: .82rem; padding: .45rem 1.1rem; border-radius: 6px; text-decoration: none; white-space: nowrap; transition: opacity .2s; flex-shrink: 0; }
     .btn-nav:hover { opacity: .88; }
-    /* Hide Google Translate default bar */
-    .goog-te-banner-frame, .skiptranslate { display: none !important; }
-    body { top: 0 !important; }
     @media (max-width: 600px) {
       .lang-bar { padding: .5rem 1rem; }
       .lang-bar-label { display: none; }
@@ -75,12 +71,12 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
 
     /* ── HERO ── */
     .hero {
-      background: linear-gradient(145deg, var(--brand-dk) 0%, var(--brand) 60%, #5070ff 100%);
+      background: url('../image volunteer hero.png') center center / cover no-repeat;
       padding: 3.5rem 2rem 3rem; text-align: center; position: relative; overflow: hidden;
     }
     .hero::before {
       content: ''; position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 110%, rgba(244,255,129,.15) 0%, transparent 60%);
+      background: linear-gradient(145deg, rgba(10,26,138,.82) 0%, rgba(48,79,254,.72) 60%, rgba(80,112,255,.65) 100%);
     }
     .hero-eyebrow {
       display: inline-flex; align-items: center; gap: .5rem;
@@ -112,7 +108,8 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
     .section-head .section-lead { margin: 0 auto; }
 
     /* ── ABOUT ── */
-    .about-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 4rem; align-items: start; }
+    .about-grid { display: grid; grid-template-columns: 1.6fr 1.8fr 2.4fr; gap: 2rem; align-items: stretch; }
+    @media (max-width: 1000px) { .about-grid { grid-template-columns: 1fr 1fr; gap: 2rem; } }
     @media (max-width: 800px) { .about-grid { grid-template-columns: 1fr; gap: 2rem; } }
     .about-list { margin-top: 1.2rem; display: flex; flex-direction: column; gap: .5rem; padding-left: 0; list-style: none; }
     .about-list li { display: flex; align-items: flex-start; gap: .65rem; font-size: .92rem; color: var(--muted); line-height: 1.55; }
@@ -140,8 +137,9 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
     .role-ideal { margin-top: 1.1rem; background: var(--light); border-radius: 8px; padding: .65rem .9rem; font-size: .8rem; color: var(--text); font-weight: 600; line-height: 1.5; border-left: 3px solid var(--brand); }
 
     /* ── EXPECT ── */
-    .expect-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2.5rem; }
-    @media (max-width: 750px) { .expect-cols { grid-template-columns: 1fr; } }
+    .expect-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-top: 2.5rem; }
+    @media (max-width: 900px) { .expect-cols { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .expect-cols { grid-template-columns: 1fr; } }
     .expect-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.6rem 1.4rem; }
     .expect-icon { font-size: 2rem; margin-bottom: .75rem; display: block; }
     .expect-card h3 { font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: .6rem; }
@@ -150,12 +148,12 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
 
     /* ── TIMELINE ── */
     .timeline { display: flex; flex-direction: column; gap: 0; margin-top: 2.5rem; position: relative; }
-    .timeline::before { content:''; position:absolute; left:1.35rem; top:.5rem; bottom:.5rem; width:2px; background: var(--border); }
+    .timeline::before { content:''; position:absolute; left:1.05rem; top:.5rem; bottom:.5rem; width:2px; background: var(--border); }
     .tl-item { display: flex; gap: 1.5rem; align-items: flex-start; padding-bottom: 2rem; position: relative; }
     .tl-item:last-child { padding-bottom: 0; }
-    .tl-dot { width: 2.7rem; height: 2.7rem; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 1; text-align: center; line-height: 1.2; font-family: 'Barlow Condensed', sans-serif; font-size: .85rem; }
+    .tl-dot { width: 2.1rem; height: 2.1rem; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; z-index: 1; text-align: center; line-height: 1.2; font-family: 'Barlow Condensed', sans-serif; font-size: .75rem; }
     .tl-content { padding-top: .3rem; }
-    .tl-content strong { display: block; font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: .3rem; }
+    .tl-content h3 { display: block; font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: .3rem; font-family: inherit; }
     .tl-content p { font-size: .85rem; color: var(--muted); line-height: 1.6; }
 
     /* ── WHY ── */
@@ -196,11 +194,15 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
     @media (max-width: 700px) { .footer-inner { grid-template-columns: 1fr; } }
     .footer-brand-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.3rem; color: #fff; margin-bottom: .5rem; }
     .footer-desc { font-size: .83rem; line-height: 1.6; max-width: 340px; }
-    .footer h4 { color: #fff; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; margin-bottom: .85rem; }
+    .footer h3 { color: #fff; font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; margin-bottom: .85rem; font-family: inherit; }
     .footer-links { list-style: none; display: flex; flex-direction: column; gap: .45rem; }
     .footer-links a { color: rgba(255,255,255,.65); font-size: .83rem; text-decoration: none; transition: color .2s; }
     .footer-links a:hover { color: var(--yellow); }
-    .footer-bottom { max-width: 1140px; margin: 2rem auto 0; border-top: 1px solid rgba(255,255,255,.1); padding-top: 1.2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; font-size: .75rem; color: rgba(255,255,255,.4); }
+    .footer-bottom { max-width: 1140px; margin: 2rem auto 0; border-top: 1px solid rgba(255,255,255,.1); padding-top: 1.2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; font-size: .75rem; color: rgba(255,255,255,.65); }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
   </style>
 </head>
 <body>
@@ -209,120 +211,154 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
 <!-- LANGUAGE BAR -->
-<nav class="lang-bar notranslate" translate="no" aria-label="Language selection">
+<nav class="lang-bar" aria-label="Language selection">
   <div class="lang-controls">
-    <span class="lang-bar-label">🌐 Language:</span>
-    <button class="lang-btn active" onclick="switchLang('en')" aria-label="English">English</button>
-    <button class="lang-btn" onclick="switchLang('es')" aria-label="Español">Español</button>
-    <button class="lang-btn" onclick="switchLang('ko')" aria-label="한국어">한국어</button>
-    <button class="lang-btn" onclick="switchLang('zh-CN')" aria-label="中文">中文</button>
-    <button class="lang-btn" onclick="switchLang('hy')" aria-label="Հայերեն">Հայերեն</button>
-    <button class="lang-btn" onclick="switchLang('tl')" aria-label="Tagalog">Tagalog</button>
-    <div class="lang-more-wrap">
-      <button class="lang-more" onclick="toggleLangDropdown()" aria-expanded="false" aria-controls="lang-dropdown-menu">More languages ▾</button>
-      <div class="lang-dropdown" id="lang-dropdown-menu" role="menu">
-        <button role="menuitem" onclick="switchLang('fr')">Français</button>
-        <button role="menuitem" onclick="switchLang('ja')">日本語</button>
-        <button role="menuitem" onclick="switchLang('vi')">Tiếng Việt</button>
-        <button role="menuitem" onclick="switchLang('ar')">العربية</button>
-        <button role="menuitem" onclick="switchLang('ru')">Русский</button>
-        <button role="menuitem" onclick="switchLang('pt')">Português</button>
-        <button role="menuitem" onclick="switchLang('de')">Deutsch</button>
-        <button role="menuitem" onclick="switchLang('hi')">हिन्दी</button>
-        <button role="menuitem" onclick="switchLang('fa')">فارسی</button>
-        <button role="menuitem" onclick="switchLang('th')">ไทย</button>
-        <button role="menuitem" onclick="switchLang('am')">አማርኛ</button>
-      </div>
-    </div>
+    <span class="lang-bar-label"><span aria-hidden="true">🌐</span> Language:</span>
+    <button type="button" class="lang-btn active" data-lang="en" onclick="switchLang('en')" aria-pressed="true" aria-label="English">English</button>
+    <button type="button" class="lang-btn" data-lang="es" onclick="switchLang('es')" aria-pressed="false" aria-label="Español">Español</button>
+    <button type="button" class="lang-btn" data-lang="ko" onclick="switchLang('ko')" aria-pressed="false" aria-label="한국어">한국어</button>
+    <button type="button" class="lang-btn" data-lang="zh-TW" onclick="switchLang('zh-TW')" aria-pressed="false" aria-label="繁體中文">繁體中文</button>
+    <button type="button" class="lang-btn" data-lang="hy" onclick="switchLang('hy')" aria-pressed="false" aria-label="Հայերեն">Հայերեն</button>
+    <button type="button" class="lang-btn" data-lang="tl" onclick="switchLang('tl')" aria-pressed="false" aria-label="Tagalog">Tagalog</button>
+    <button type="button" class="lang-btn" data-lang="fa" onclick="switchLang('fa')" aria-pressed="false" aria-label="فارسی">فارسی</button>
   </div>
-  <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" class="btn-nav">Apply Now <span aria-hidden="true">→</span></a>
+  <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" class="btn-nav" aria-label="Apply Now (opens in new tab)"><span data-i18n="nav-apply">Apply Now</span> <span aria-hidden="true">→</span></a>
 </nav>
 
 <main id="main-content">
 
 <!-- HERO -->
-<section class="hero" id="hero">
+<section class="hero" id="hero" aria-labelledby="hero-heading">
   <div style="position:relative;z-index:1;">
-    <div class="hero-eyebrow"><span aria-hidden="true">⚽</span> Los Angeles · 2026</div>
-    <h1>Volunteer for<br><em>Kick It</em><br>In the Park</h1>
-    <p class="hero-sub">This summer, the City of Los Angeles is bringing free, family-friendly World Cup watch parties to Rec &amp; Park centers citywide. We're launching a volunteer pilot at select sites — help us build the model for future global events.</p>
+    <div class="hero-eyebrow" data-i18n="hero-eyebrow"><span aria-hidden="true">⚽</span> Los Angeles · 2026</div>
+    <h1 id="hero-heading" data-i18n-html="hero-h1">Volunteer for<br><em>Kick It</em><br>In the Park</h1>
+    <p class="hero-sub" data-i18n="hero-sub">This summer, the City of Los Angeles is bringing free, family-friendly World Cup watch parties to Rec &amp; Park centers citywide. We're launching a volunteer pilot at select sites — help us build the model for future global events.</p>
     <div class="hero-ctas">
-      <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" class="btn-primary">Apply Now</a>
-      <a href="#roles" class="btn-outline">Learn About Volunteer Roles <span aria-hidden="true">↓</span></a>
+      <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" class="btn-primary" aria-label="Apply Now (opens in new tab)" data-i18n="hero-btn-primary">Apply Now</a>
+      <a href="#roles" class="btn-outline" data-i18n="hero-btn-outline">Learn About Volunteer Roles <span aria-hidden="true">↓</span></a>
     </div>
   </div>
 </section>
 
 <!-- ABOUT -->
-<section class="section section-light" id="about">
+<section class="section section-light" id="about" aria-labelledby="about-heading">
   <div class="container">
     <div class="section-head">
-      <div class="section-eyebrow">About the Program</div>
-      <h2 class="section-title">About Kick It In the Park</h2>
+      <div class="section-eyebrow" data-i18n="about-eyebrow">About the Program</div>
+      <h2 id="about-heading" class="section-title" data-i18n="about-title">About Kick It In the Park Volunteering</h2>
     </div>
     <div class="about-grid">
       <div>
-        <p class="section-lead" style="margin-bottom:1.2rem;">From June 11 to July 19, 2026, the City will host daily World Cup watch parties rotating across different Recreation &amp; Parks sites citywide.</p>
-        <p style="font-size:.95rem;color:var(--muted);font-weight:600;margin-bottom:.75rem;">Activations include:</p>
-        <ul class="about-list">
-          <li><span aria-hidden="true">✓ </span>Live match screenings</li>
-          <li><span aria-hidden="true">✓ </span>Youth soccer clinics and skills activities</li>
-          <li><span aria-hidden="true">✓ </span>Family-friendly fun zones</li>
-          <li><span aria-hidden="true">✓ </span>City resource tables and programming</li>
+        <p style="font-size:.92rem;color:var(--muted);line-height:1.65;margin-bottom:1.2rem;" data-i18n="about-p1">From June 11 to July 19, 2026, the City will host daily World Cup watch parties rotating across different Recreation &amp; Parks sites citywide.</p>
+        <p style="font-size:.92rem;color:var(--muted);font-weight:600;margin-bottom:.75rem;" data-i18n="about-activations-label">Activations include:</p>
+        <ul class="about-list" role="list">
+          <li><span aria-hidden="true">✓ </span><span data-i18n="about-li-1">Live match screenings</span></li>
+          <li><span aria-hidden="true">✓ </span><span data-i18n="about-li-2">Youth soccer clinics and skills activities</span></li>
+          <li><span aria-hidden="true">✓ </span><span data-i18n="about-li-3">Family-friendly fun zones</span></li>
+          <li><span aria-hidden="true">✓ </span><span data-i18n="about-li-4">City resource tables and programming</span></li>
         </ul>
-        <p style="margin-top:1rem;font-size:.88rem;"><a href="https://kickit.lacity.gov" target="_blank" rel="noopener" aria-label="Learn more about Kick It In the Park (opens in new tab)" style="color:var(--brand);font-weight:600;text-decoration:none;">Learn more about Kick It In the Park here →</a></p>
+        <p style="margin-top:1rem;font-size:.92rem;"><a href="https://kickit.lacity.gov" target="_blank" rel="noopener" aria-label="Learn more about Kick It In the Park (opens in new tab)" style="color:var(--brand);font-weight:600;text-decoration:none;" data-i18n="about-learn-more">Learn more about Kick It In the Park here →</a></p>
       </div>
-      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);padding:1.75rem 1.8rem;">
-        <div class="section-eyebrow" style="margin-bottom:.6rem;">Pilot Locations</div>
-        <p style="font-size:.95rem;font-weight:700;color:var(--text);line-height:1.45;margin-bottom:1rem;">The volunteer pilot program will take place at select Kick It In the Park sites across the city, including:</p>
-        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.25rem;">
-          <li style="font-size:.88rem;color:var(--muted);"><span aria-hidden="true" style="color:var(--brand);font-weight:700;margin-right:.4rem;">✓</span>Downtown L.A.</li>
-          <li style="font-size:.88rem;color:var(--muted);"><span aria-hidden="true" style="color:var(--brand);font-weight:700;margin-right:.4rem;">✓</span>Echo Park Neighborhood</li>
-          <li style="font-size:.88rem;color:var(--muted);"><span aria-hidden="true" style="color:var(--brand);font-weight:700;margin-right:.4rem;">✓</span>South Los Angeles Neighborhood</li>
-          <li style="font-size:.88rem;color:var(--muted);"><span aria-hidden="true" style="color:var(--brand);font-weight:700;margin-right:.4rem;">✓</span>North Hollywood Neighborhood</li>
-          <li style="font-size:.88rem;color:var(--muted);"><span aria-hidden="true" style="color:var(--brand);font-weight:700;margin-right:.4rem;">✓</span>Century City Neighborhood</li>
-          <li style="font-size:.88rem;color:var(--muted);"><span aria-hidden="true" style="color:var(--brand);font-weight:700;margin-right:.4rem;">✓</span>Westwood Neighborhood</li>
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;">
+        <div style="padding:.75rem 1rem .5rem;border-bottom:1px solid var(--border);">
+          <div class="section-eyebrow" style="margin:0;" data-i18n="about-locations-eyebrow">Pilot Locations and Dates</div>
+        </div>
+        <div style="padding:1.2rem 1.4rem;flex:1;">
+        <p style="font-size:.92rem;font-weight:700;color:var(--text);line-height:1.45;margin-bottom:1rem;" data-i18n="about-locations-intro">The volunteer pilot program will take place at select Kick It In the Park sites across the city, including:</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:.8rem;margin-bottom:1.25rem;" role="list">
+          <li>
+            <div style="display:flex;align-items:flex-start;gap:.4rem;">
+              <span aria-hidden="true" style="color:var(--brand);font-weight:700;flex-shrink:0;">✓</span>
+              <div>
+                <span style="font-size:.88rem;font-weight:700;color:var(--text);">Echo Park Lake</span>
+                <span style="display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem;">June 11, 16, 21, 26 · July 1, 6, 14</span>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div style="display:flex;align-items:flex-start;gap:.4rem;">
+              <span aria-hidden="true" style="color:var(--brand);font-weight:700;flex-shrink:0;">✓</span>
+              <div>
+                <span style="font-size:.88rem;font-weight:700;color:var(--text);">Jackie Tatum Harvard Recreation Center</span>
+                <span style="display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem;">June 12, 17, 22, 27 · July 2, 7, 15</span>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div style="display:flex;align-items:flex-start;gap:.4rem;">
+              <span aria-hidden="true" style="color:var(--brand);font-weight:700;flex-shrink:0;">✓</span>
+              <div>
+                <span style="font-size:.88rem;font-weight:700;color:var(--text);">Whitsett Fields</span>
+                <span style="display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem;">June 13, 18, 23, 28 · July 3, 8, 18</span>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div style="display:flex;align-items:flex-start;gap:.4rem;">
+              <span aria-hidden="true" style="color:var(--brand);font-weight:700;flex-shrink:0;">✓</span>
+              <div>
+                <span style="font-size:.88rem;font-weight:700;color:var(--text);">Cheviot Hills Recreation Center</span>
+                <span style="display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem;">June 14, 19, 24</span>
+              </div>
+            </div>
+          </li>
+          <li>
+            <div style="display:flex;align-items:flex-start;gap:.4rem;">
+              <span aria-hidden="true" style="color:var(--brand);font-weight:700;flex-shrink:0;">✓</span>
+              <div>
+                <span style="font-size:.88rem;font-weight:700;color:var(--text);">Westwood Recreation Center</span>
+                <span style="display:block;font-size:.78rem;color:var(--muted);margin-top:.1rem;">June 29 · July 4, 10, 19</span>
+              </div>
+            </div>
+          </li>
         </ul>
-        <p style="font-size:.85rem;font-weight:600;color:var(--text);">If you live nearby, <a href="#apply" style="color:var(--brand);text-decoration:none;font-weight:700;">sign up to join us!</a></p>
+        <p style="font-size:.85rem;font-weight:600;color:var(--text);" data-i18n-html="about-signup-html">If you live nearby, <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:none;font-weight:700;">sign up to join us!</a></p>
+        </div>
+      </div>
+      <div style="background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;">
+        <div style="padding:.75rem 1rem .5rem;border-bottom:1px solid var(--border);">
+          <div class="section-eyebrow" style="margin:0;">Volunteer Pilot Locations</div>
+        </div>
+        <div id="volunteer-map" role="application" aria-label="Map showing the 5 volunteer pilot site locations across Los Angeles" style="flex:1;min-height:300px;"></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- VOLUNTEER ROLES -->
-<section class="section" id="roles">
+<section class="section" id="roles" aria-labelledby="roles-heading">
   <div class="container">
     <div class="section-head">
-      <div class="section-eyebrow">Get Involved</div>
-      <h2 class="section-title">Volunteer Roles</h2>
-      <p class="section-lead">We are recruiting two types of volunteers. Both roles are critical to making each celebration a success.</p>
+      <div class="section-eyebrow" data-i18n="roles-eyebrow">Get Involved</div>
+      <h2 id="roles-heading" class="section-title" data-i18n="roles-title">Volunteer Roles</h2>
+      <p class="section-lead" data-i18n="roles-lead">We are recruiting two types of volunteers. Both roles are critical to making each celebration a success.</p>
     </div>
     <div class="roles-grid">
 
       <div class="role-card featured">
-        <span class="role-badge high">High Commitment · Neighborhood-Based</span>
-        <h3>District Lead Volunteer Coordinators</h3>
-        <p class="role-sub">Neighborhood-Based Leadership</p>
-        <ul class="role-list">
-          <li>Welcome and guide attendees; help create an inclusive, positive atmosphere</li>
-          <li>Support and organize general volunteers during each activation</li>
-          <li>Help troubleshoot minor issues and escalate concerns to City staff</li>
-          <li>Represent the City and your neighborhood with professionalism and pride</li>
+        <span class="role-badge high" data-i18n="role1-badge">High Commitment · Neighborhood-Based</span>
+        <h3 data-i18n="role1-title">District Lead Volunteer Coordinators</h3>
+        <p class="role-sub" data-i18n="role1-sub">Neighborhood-Based Leadership</p>
+        <ul class="role-list" role="list">
+          <li data-i18n="role1-li-1">Welcome and guide attendees; help create an inclusive, positive atmosphere</li>
+          <li data-i18n="role1-li-2">Support and organize general volunteers during each activation</li>
+          <li data-i18n="role1-li-3">Help troubleshoot minor issues and escalate concerns to City staff</li>
+          <li data-i18n="role1-li-4">Represent the City and your neighborhood with professionalism and pride</li>
         </ul>
-        <div class="role-ideal">Ideal for community leaders, experienced volunteers, and individuals comfortable in public-facing settings.</div>
+        <p class="role-ideal" data-i18n="role1-ideal">Ideal for community leaders, experienced volunteers, and individuals comfortable in public-facing settings.</p>
       </div>
 
       <div class="role-card featured">
-        <span class="role-badge flex">Flexible · Citywide</span>
-        <h3>General Volunteers</h3>
-        <p class="role-sub">Day-of Support · One Shift or Many</p>
-        <ul class="role-list">
-          <li>Greet attendees and provide wayfinding</li>
-          <li>Assist with event set-up and breakdown</li>
-          <li>Assist with programming or tabling</li>
-          <li>Support accessibility and inclusive engagement</li>
+        <span class="role-badge flex" data-i18n="role2-badge">Flexible · Citywide</span>
+        <h3 data-i18n="role2-title">General Volunteers</h3>
+        <p class="role-sub" data-i18n="role2-sub">Day-of Support · One Shift or Many</p>
+        <ul class="role-list" role="list">
+          <li data-i18n="role2-li-1">Greet attendees and provide wayfinding</li>
+          <li data-i18n="role2-li-2">Assist with event set-up and breakdown</li>
+          <li data-i18n="role2-li-3">Assist with programming or tabling</li>
+          <li data-i18n="role2-li-4">Support accessibility and inclusive engagement</li>
         </ul>
-        <div class="role-ideal">Whenever possible, volunteers will be placed in their home district — though some flexibility may be needed to ensure full staffing across all pilot sites.</div>
+        <p class="role-ideal" data-i18n="role2-ideal">Whenever possible, volunteers will be placed in their home district — though some flexibility may be needed to ensure full staffing across all pilot sites.</p>
       </div>
 
     </div>
@@ -330,19 +366,19 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
 </section>
 
 <!-- WHAT TO EXPECT -->
-<section class="section section-light" id="expect">
+<section class="section section-light" id="expect" aria-labelledby="expect-heading">
   <div class="container">
     <div class="section-head">
-      <div class="section-eyebrow">Before You Apply</div>
-      <h2 class="section-title">What to Expect</h2>
-      <p class="section-lead">Here's what you need to know about time commitment, eligibility, and training before applying.</p>
+      <div class="section-eyebrow" data-i18n="expect-eyebrow">Before You Apply</div>
+      <h2 id="expect-heading" class="section-title" data-i18n="expect-title">What to Expect</h2>
+      <p class="section-lead" data-i18n="expect-lead">Here's what you need to know about time commitment, eligibility, and training before applying.</p>
     </div>
     <div class="expect-cols">
 
       <div class="expect-card">
         <span class="expect-icon" aria-hidden="true">🕐</span>
-        <h3>Time Commitment</h3>
-        <ul>
+        <h3 data-i18n="expect-card1-title">Time Commitment</h3>
+        <ul data-i18n-html="expect-card1-html">
           <li><strong>General Volunteers:</strong> Sign up for one shift or multiple shifts – your choice! Shifts are around 4 hours.</li>
           <li style="margin-top:.4rem;"><strong>District Leads:</strong> Each district will have seven total activation days (approximately one every five days). We ask that our Leads commit to all or nearly all seven days for consistency.</li>
         </ul>
@@ -350,17 +386,26 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
 
       <div class="expect-card">
         <span class="expect-icon" aria-hidden="true">✅</span>
-        <h3>Eligibility</h3>
-        <ul>
+        <h3 data-i18n="expect-card2-title">Eligibility</h3>
+        <ul data-i18n-html="expect-card2-html">
           <li>Must be 18 years or older.</li>
           <li>Must be reliable and able to fulfill confirmed shifts.</li>
         </ul>
       </div>
 
       <div class="expect-card">
+        <span class="expect-icon" aria-hidden="true">📝</span>
+        <h3 data-i18n="expect-card4-title">Sign Up</h3>
+        <ul data-i18n-html="expect-card4-html">
+          <li>First, complete a general registration form and any required waivers to sign up as a Kick It In the Park volunteer.</li>
+          <li>Once approved by the organizers, you'll be able to sign up for specific shifts at your chosen district location.</li>
+        </ul>
+      </div>
+
+      <div class="expect-card">
         <span class="expect-icon" aria-hidden="true">📋</span>
-        <h3>Training</h3>
-        <ul>
+        <h3 data-i18n="expect-card3-title">Training</h3>
+        <ul data-i18n-html="expect-card3-html">
           <li>All selected volunteers will participate in a brief required virtual training in May.</li>
           <li>Training will prepare you for your role and help you understand expectations.</li>
         </ul>
@@ -371,44 +416,44 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
 </section>
 
 <!-- TIMELINE -->
-<section class="section" id="timeline">
+<section class="section" id="timeline" aria-labelledby="timeline-heading">
   <div class="container" style="max-width:800px;">
     <div class="section-head">
-      <div class="section-eyebrow">How It Works</div>
-      <h2 class="section-title">Timeline</h2>
-      <p class="section-lead">Here's what the process looks like from sign-up to game day.</p>
+      <div class="section-eyebrow" data-i18n="timeline-eyebrow">How It Works</div>
+      <h2 id="timeline-heading" class="section-title" data-i18n="timeline-title">Timeline</h2>
+      <p class="section-lead" data-i18n="timeline-lead">Here's what the process looks like from sign-up to game day.</p>
     </div>
     <ol class="timeline" aria-label="Volunteer program timeline">
 
       <li class="tl-item">
         <div class="tl-dot" aria-hidden="true"></div>
         <div class="tl-content">
-          <strong>April – Early May: Sign Up to Join</strong>
-          <p>You'll tell us about your availability, pilot location preference, background, and interest — and we'll try to match you as best we can.</p>
+          <h3 data-i18n="tl1-title">April – Early May: Sign Up to Join</h3>
+          <p data-i18n="tl1-p">Tell us about your availability, pilot location preference, background, and complete the needed waivers — we'll then review and approve your application so you can sign up for shifts.</p>
         </div>
       </li>
 
       <li class="tl-item">
         <div class="tl-dot" aria-hidden="true"></div>
         <div class="tl-content">
-          <strong>Mid May: Role Confirmations &amp; Shift Assignments</strong>
-          <p>Role confirmations and shift assignments sent. Confirm with us as soon as possible that you're available to join.</p>
+          <h3 data-i18n="tl2-title">Mid May: Role Confirmations &amp; Shift Assignments</h3>
+          <p data-i18n="tl2-p">Sign up for shifts and role. Confirm with us as soon as possible that you're available to join.</p>
         </div>
       </li>
 
       <li class="tl-item">
         <div class="tl-dot" aria-hidden="true"></div>
         <div class="tl-content">
-          <strong>Late May: Required Volunteer Training</strong>
-          <p>Required volunteer training sessions, accessed virtually. We may ask District Leads to join us for site walkthroughs in your neighborhood before the event.</p>
+          <h3 data-i18n="tl3-title">Late May: Required Volunteer Training</h3>
+          <p data-i18n="tl3-p">Required volunteer training sessions, accessed virtually. We may ask District Leads to join us for site walkthroughs in your neighborhood before the event.</p>
         </div>
       </li>
 
       <li class="tl-item">
         <div class="tl-dot" aria-hidden="true"></div>
         <div class="tl-content">
-          <strong>June – July: Kick It In the Park Events</strong>
-          <p>This is when you step onto the pitch and bring community pride to life. Events run June 11 through July 19, 2026.</p>
+          <h3 data-i18n="tl4-title">June – July: Kick It In the Park Events</h3>
+          <p data-i18n="tl4-p">This is when you step onto the pitch and bring community pride to life. Events run June 11 through July 19, 2026.</p>
         </div>
       </li>
 
@@ -417,91 +462,91 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
 </section>
 
 <!-- WHY VOLUNTEER -->
-<section class="section section-light" id="why">
+<section class="section section-light" id="why" aria-labelledby="why-heading">
   <div class="container">
     <div class="section-head">
-      <div class="section-eyebrow">Make a Difference</div>
-      <h2 class="section-title">Why Volunteer?</h2>
-      <p class="section-lead">More than a watch party — this is a chance to be part of something bigger.</p>
+      <div class="section-eyebrow" data-i18n="why-eyebrow">Make a Difference</div>
+      <h2 id="why-heading" class="section-title" data-i18n="why-title">Why Volunteer?</h2>
+      <p class="section-lead" data-i18n="why-lead">More than a watch party — this is a chance to be part of something bigger.</p>
     </div>
-    <ul class="why-grid" style="list-style:none;padding:0;">
+    <ul class="why-grid" style="list-style:none;padding:0;" role="list">
       <li class="why-card">
         <span class="why-icon" aria-hidden="true">🏘️</span>
-        <p>Celebrate your neighborhood</p>
+        <p data-i18n="why-1">Celebrate your neighborhood</p>
       </li>
       <li class="why-card">
         <span class="why-icon" aria-hidden="true">🤝</span>
-        <p>Connect with fellow Angelenos</p>
+        <p data-i18n="why-2">Connect with fellow Angelenos</p>
       </li>
       <li class="why-card">
         <span class="why-icon" aria-hidden="true">👧</span>
-        <p>Support youth and families</p>
+        <p data-i18n="why-3">Support youth and families</p>
       </li>
       <li class="why-card">
         <span class="why-icon" aria-hidden="true">⚽</span>
-        <p>Show your love for the game of soccer</p>
+        <p data-i18n="why-4">Show your love for the game of soccer</p>
       </li>
       <li class="why-card">
         <span class="why-icon" aria-hidden="true">🌍</span>
-        <p>Be part of a historic global moment</p>
+        <p data-i18n="why-5">Be part of a historic global moment</p>
       </li>
       <li class="why-card">
         <span class="why-icon" aria-hidden="true">🏛️</span>
-        <p>Help shape the City's future volunteer network</p>
+        <p data-i18n="why-6">Help shape the City's future volunteer network</p>
       </li>
     </ul>
-    <div class="why-callout">
+    <div class="why-callout" data-i18n-html="why-callout-html">
       As a pilot, this program also serves as an early step in building Los Angeles' long-term volunteer infrastructure ahead of the <strong>2028 Olympics and Paralympic Games</strong>. We hope to reactivate this group in the years to come as we prepare to host at a global scale!
     </div>
   </div>
 </section>
 
 <!-- VOLUNTEER PERKS -->
-<section class="section" id="perks">
+<section class="section" id="perks" aria-labelledby="perks-heading">
   <div class="container">
     <div class="section-head">
-      <div class="section-eyebrow">Thank You Gifts</div>
-      <h2 class="section-title">Volunteer Perks</h2>
-      <p class="section-lead">Our way of saying thank you for showing up for your city.</p>
+      <div class="section-eyebrow" data-i18n="perks-eyebrow">Thank You Gifts</div>
+      <h2 id="perks-heading" class="section-title" data-i18n="perks-title">Volunteer Perks</h2>
+      <p class="section-lead" data-i18n="perks-lead">Our way of saying thank you for showing up for your city.</p>
     </div>
-    <ul class="perks-grid" style="list-style:none;padding:0;">
+    <ul class="perks-grid" style="list-style:none;padding:0;" role="list">
       <li class="perk-card">
         <span class="perk-icon" aria-hidden="true">👕</span>
-        <p>Branded Kick It In the Park volunteer apparel</p>
+        <p data-i18n="perk-1">Branded Kick It In the Park volunteer apparel</p>
       </li>
       <li class="perk-card">
         <span class="perk-icon" aria-hidden="true">🥤</span>
-        <p>Light food and beverage during your shift</p>
+        <p data-i18n="perk-2">Light food and beverage during your shift</p>
       </li>
       <li class="perk-card">
         <span class="perk-icon" aria-hidden="true">🤝</span>
-        <p>A community of fellow civic-minded Angelenos</p>
+        <p data-i18n="perk-3">A community of fellow civic-minded Angelenos</p>
       </li>
       <li class="perk-card">
         <span class="perk-icon" aria-hidden="true">📜</span>
-        <p>Certification of service (for those who request)</p>
+        <p data-i18n="perk-4">Certification of service (for those who request)</p>
       </li>
     </ul>
   </div>
 </section>
 
 <!-- APPLY CTA -->
-<section class="section section-light" id="apply" style="text-align:center;">
+<section class="section section-light" id="apply" style="text-align:center;" aria-labelledby="apply-heading">
   <div class="container" style="max-width:640px;">
-    <div class="section-eyebrow">Ready to Join?</div>
-    <h2 class="section-title">Apply to Volunteer</h2>
-    <p class="section-lead" style="margin:0 auto 2rem;">We'll review submissions and send role confirmations in mid-May. We can't wait to have you on the team.</p>
-    <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" class="btn-primary" style="font-size:1.1rem;padding:1rem 2.5rem;">Apply Now <span aria-hidden="true">→</span></a>
-    <p style="margin-top:1rem;font-size:.8rem;color:var(--muted);">Questions? Email <a href="mailto:maraya.kenyguyer@lacity.org" style="color:var(--brand);font-weight:600;">maraya.kenyguyer@lacity.org</a></p>
+    <div class="section-eyebrow" data-i18n="apply-eyebrow">Ready to Join?</div>
+    <h2 id="apply-heading" class="section-title" data-i18n="apply-title">Apply to Volunteer</h2>
+    <p class="section-lead" style="margin:0 auto 2rem;" data-i18n="apply-lead">We'll review submissions and approve roles by mid-May so you can sign up for shifts. We can't wait to have you on the team.</p>
+    <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" class="btn-primary" style="font-size:1.1rem;padding:1rem 2.5rem;" aria-label="Apply Now (opens in new tab)" data-i18n="apply-btn">Apply Now →</a>
+    <p style="margin-top:1rem;font-size:.8rem;color:var(--muted);" data-i18n-html="apply-questions-html">Questions? Email <a href="mailto:maraya.kenyguyer@lacity.org" style="color:var(--brand);font-weight:600;">maraya.kenyguyer@lacity.org</a></p>
   </div>
 </section>
 
 <!-- FAQ -->
-<section class="section" id="faq">
+<section class="section" id="faq" aria-labelledby="faq-heading">
   <div class="container" style="max-width:800px;">
     <div class="section-head">
-      <div class="section-eyebrow">Frequently Asked Questions</div>
-      <h2 class="section-title">What You Need to Know</h2>
+      <div class="section-eyebrow" data-i18n="faq-eyebrow">Frequently Asked Questions</div>
+      <h2 id="faq-heading" class="section-title" data-i18n="faq-title">What You Need to Know</h2>
     </div>
     <div class="faq-list" id="faq-list"></div>
   </div>
@@ -513,23 +558,23 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
 <footer class="footer">
   <div class="footer-inner">
     <div>
-      <div class="footer-brand-name"><span aria-hidden="true">⚽</span> Kick It In the Park — Volunteer</div>
-      <p class="footer-desc">A City of Los Angeles volunteer program supporting the 2026 FIFA World Cup community celebrations. Produced in partnership with L.A. City Council Districts, L.A. Recreation &amp; Parks, and the Mayor's Office.</p>
+      <div class="footer-brand-name" data-i18n-html="footer-brand-name"><span aria-hidden="true">⚽</span> Kick It In the Park — Volunteer</div>
+      <p class="footer-desc" data-i18n="footer-desc">A City of Los Angeles volunteer program supporting the 2026 FIFA World Cup community celebrations. Produced in partnership with L.A. City Council Districts, L.A. Recreation &amp; Parks, and the Mayor's Office.</p>
     </div>
     <div>
-      <h4>On This Page</h4>
-      <ul class="footer-links">
-        <li><a href="#about">About the Program</a></li>
-        <li><a href="#roles">Volunteer Roles</a></li>
-        <li><a href="#expect">What to Expect</a></li>
-        <li><a href="#timeline">Timeline</a></li>
-        <li><a href="#why">Why Volunteer</a></li>
-        <li><a href="#faq">FAQ</a></li>
+      <h3 data-i18n="footer-nav-title">On This Page</h3>
+      <ul class="footer-links" role="list">
+        <li><a href="#about" data-i18n="footer-nav-about">About the Program</a></li>
+        <li><a href="#roles" data-i18n="footer-nav-roles">Volunteer Roles</a></li>
+        <li><a href="#expect" data-i18n="footer-nav-expect">What to Expect</a></li>
+        <li><a href="#timeline" data-i18n="footer-nav-timeline">Timeline</a></li>
+        <li><a href="#why" data-i18n="footer-nav-why">Why Volunteer</a></li>
+        <li><a href="#faq" data-i18n="footer-nav-faq">FAQ</a></li>
       </ul>
     </div>
     <div>
-      <h4>City Resources</h4>
-      <ul class="footer-links">
+      <h3 data-i18n="footer-city-title">City Resources</h3>
+      <ul class="footer-links" role="list">
         <li><a href="https://mayor.lacity.gov" target="_blank" rel="noopener" aria-label="Mayor Karen Bass (opens in new tab)">Mayor Karen Bass</a></li>
         <li><a href="https://www.laparks.org" target="_blank" rel="noopener" aria-label="L.A. Recreation and Parks (opens in new tab)">L.A. Recreation &amp; Parks</a></li>
         <li><a href="https://losangelesfwc26.com/" target="_blank" rel="noopener" aria-label="Los Angeles FIFA 2026 (opens in new tab)">Los Angeles FIFA 2026</a></li>
@@ -537,112 +582,879 @@ body { font-family: 'Inter', system-ui, sans-serif; color: var(--text); backgrou
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2026 City of Los Angeles · All Rights Reserved</span>
+    <span data-i18n="footer-copyright">© 2026 City of Los Angeles · All Rights Reserved</span>
+    <p data-i18n="footer-translation-disclaimer" style="width:100%;margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(255,255,255,.1);font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.6;">This page was translated using automated translation tools to help our community access important information. While we strive for accuracy, we apologize for any imperfections and welcome you to reach out if you need clarification.</p>
   </div>
 </footer>
 
 <script>
-/* ── GOOGLE TRANSLATE ── */
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({ pageLanguage: 'en', autoDisplay: false }, 'google_translate_element');
-}
+const T = {
+  en: {
+    'nav-apply': 'Apply Now',
+    'hero-eyebrow': '⚽ Los Angeles · 2026',
+    'hero-h1': 'Volunteer for<br><em>Kick It</em><br>In the Park',
+    'hero-sub': 'This summer, the City of Los Angeles is bringing free, family-friendly World Cup watch parties to Rec & Park centers citywide. We\'re launching a volunteer pilot at select sites — help us build the model for future global events.',
+    'hero-btn-primary': 'Apply Now',
+    'hero-btn-outline': 'Learn About Volunteer Roles ↓',
+    'about-eyebrow': 'About the Program',
+    'about-title': 'About Kick It In the Park Volunteering',
+    'about-p1': 'From June 11 to July 19, 2026, the City will host daily World Cup watch parties rotating across different Recreation & Parks sites citywide.',
+    'about-activations-label': 'Activations include:',
+    'about-li-1': 'Live match screenings',
+    'about-li-2': 'Youth soccer clinics and skills activities',
+    'about-li-3': 'Family-friendly fun zones',
+    'about-li-4': 'City resource tables and programming',
+    'about-learn-more': 'Learn more about Kick It In the Park here →',
+    'about-locations-eyebrow': 'Pilot Locations and Dates',
+    'about-locations-intro': 'The volunteer pilot program will take place at select Kick It In the Park sites across the city, including:',
+    'about-signup-html': 'If you live nearby, <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:none;font-weight:700;">sign up to join us!</a>',
+    'roles-eyebrow': 'Get Involved',
+    'roles-title': 'Volunteer Roles',
+    'roles-lead': 'We are recruiting two types of volunteers. Both roles are critical to making each celebration a success.',
+    'role1-badge': 'High Commitment · Neighborhood-Based',
+    'role1-title': 'District Lead Volunteer Coordinators',
+    'role1-sub': 'Neighborhood-Based Leadership',
+    'role1-li-1': 'Welcome and guide attendees; help create an inclusive, positive atmosphere',
+    'role1-li-2': 'Support and organize general volunteers during each activation',
+    'role1-li-3': 'Help troubleshoot minor issues and escalate concerns to City staff',
+    'role1-li-4': 'Represent the City and your neighborhood with professionalism and pride',
+    'role1-ideal': 'Ideal for community leaders, experienced volunteers, and individuals comfortable in public-facing settings.',
+    'role2-badge': 'Flexible · Citywide',
+    'role2-title': 'General Volunteers',
+    'role2-sub': 'Day-of Support · One Shift or Many',
+    'role2-li-1': 'Greet attendees and provide wayfinding',
+    'role2-li-2': 'Assist with event set-up and breakdown',
+    'role2-li-3': 'Assist with programming or tabling',
+    'role2-li-4': 'Support accessibility and inclusive engagement',
+    'role2-ideal': 'Whenever possible, volunteers will be placed in their home district — though some flexibility may be needed to ensure full staffing across all pilot sites.',
+    'expect-eyebrow': 'Before You Apply',
+    'expect-title': 'What to Expect',
+    'expect-lead': 'Here\'s what you need to know about time commitment, eligibility, and training before applying.',
+    'expect-card1-title': 'Time Commitment',
+    'expect-card1-html': '<li><strong>General Volunteers:</strong> Sign up for one shift or multiple shifts – your choice! Shifts are around 4 hours.</li><li style="margin-top:.4rem;"><strong>District Leads:</strong> Each district will have seven total activation days (approximately one every five days). We ask that our Leads commit to all or nearly all seven days for consistency.</li>',
+    'expect-card2-title': 'Eligibility',
+    'expect-card2-html': '<li>Must be 18 years or older.</li><li>Must be reliable and able to fulfill confirmed shifts.</li>',
+    'expect-card3-title': 'Training',
+    'expect-card3-html': '<li>All selected volunteers will participate in a brief required virtual training in May.</li><li>Training will prepare you for your role and help you understand expectations.</li>',
+    'expect-card4-title': 'Sign Up',
+    'expect-card4-html': '<li>First, complete a general registration form and any required waivers to sign up as a Kick It In the Park volunteer.</li><li>Once approved by the organizers, you\'ll be able to sign up for specific shifts at your chosen district location.</li>',
+    'timeline-eyebrow': 'How It Works',
+    'timeline-title': 'Timeline',
+    'timeline-lead': 'Here\'s what the process looks like from sign-up to game day.',
+    'tl1-title': 'April – Early May: Sign Up to Join',
+    'tl1-p': 'Tell us about your availability, pilot location preference, background, and complete the needed waivers — we\'ll then review and approve your application so you can sign up for shifts.',
+    'tl2-title': 'Mid May: Role Confirmations & Shift Assignments',
+    'tl2-p': 'Sign up for shifts and role. Confirm with us as soon as possible that you\'re available to join.',
+    'tl3-title': 'Late May: Required Volunteer Training',
+    'tl3-p': 'Required volunteer training sessions, accessed virtually. We may ask District Leads to join us for site walkthroughs in your neighborhood before the event.',
+    'tl4-title': 'June – July: Kick It In the Park Events',
+    'tl4-p': 'This is when you step onto the pitch and bring community pride to life. Events run June 11 through July 19, 2026.',
+    'why-eyebrow': 'Make a Difference',
+    'why-title': 'Why Volunteer?',
+    'why-lead': 'More than a watch party — this is a chance to be part of something bigger.',
+    'why-1': 'Celebrate your neighborhood',
+    'why-2': 'Connect with fellow Angelenos',
+    'why-3': 'Support youth and families',
+    'why-4': 'Show your love for the game of soccer',
+    'why-5': 'Be part of a historic global moment',
+    'why-6': 'Help shape the City\'s future volunteer network',
+    'why-callout-html': 'As a pilot, this program also serves as an early step in building Los Angeles\' long-term volunteer infrastructure ahead of the <strong>2028 Olympics and Paralympic Games</strong>. We hope to reactivate this group in the years to come as we prepare to host at a global scale!',
+    'perks-eyebrow': 'Thank You Gifts',
+    'perks-title': 'Volunteer Perks',
+    'perks-lead': 'Our way of saying thank you for showing up for your city.',
+    'perk-1': 'Branded Kick It In the Park volunteer apparel',
+    'perk-2': 'Light food and beverage during your shift',
+    'perk-3': 'A community of fellow civic-minded Angelenos',
+    'perk-4': 'Certification of service (for those who request)',
+    'apply-eyebrow': 'Ready to Join?',
+    'apply-title': 'Apply to Volunteer',
+    'apply-lead': 'We\'ll review submissions and approve roles by mid-May so you can sign up for shifts. We can\'t wait to have you on the team.',
+    'apply-btn': 'Apply Now →',
+    'apply-questions-html': 'Questions? Email <a href="mailto:maraya.kenyguyer@lacity.org" style="color:var(--brand);font-weight:600;">maraya.kenyguyer@lacity.org</a>',
+    'faq-eyebrow': 'Frequently Asked Questions',
+    'faq-title': 'What You Need to Know',
+    'footer-brand-name': '<span aria-hidden="true">⚽</span> Kick It In the Park — Volunteer',
+    'footer-desc': 'A City of Los Angeles volunteer program supporting the 2026 FIFA World Cup community celebrations. Produced in partnership with L.A. City Council Districts, L.A. Recreation & Parks, and the Mayor\'s Office.',
+    'footer-nav-title': 'On This Page',
+    'footer-nav-about': 'About the Program',
+    'footer-nav-roles': 'Volunteer Roles',
+    'footer-nav-expect': 'What to Expect',
+    'footer-nav-timeline': 'Timeline',
+    'footer-nav-why': 'Why Volunteer',
+    'footer-nav-faq': 'FAQ',
+    'footer-city-title': 'City Resources',
+    'footer-copyright': '© 2026 City of Los Angeles · All Rights Reserved',
+    'footer-translation-disclaimer': 'This page was translated using automated translation tools to help our community access important information. While we strive for accuracy, we apologize for any imperfections and welcome you to reach out if you need clarification.',
+    faqs: [
+      { q: 'Will I be paid?', a: 'No. This is a volunteer opportunity and does not include compensation or tickets to official matches.' },
+      { q: 'Is this the official FIFA Volunteer Program?', a: 'No. This is a City of Los Angeles-run volunteer program supporting community celebrations at neighborhood sites — not official FIFA venues.' },
+      { q: 'Is there a minimum shift requirement?', a: 'General Volunteers may sign up for one or multiple shifts. We ask that District Lead Coordinators commit to as many of the seven events in their district as they can make — helping bring consistency across the activations.' },
+      { q: 'Will I get to watch the games during the celebrations?', a: 'Most volunteers will be stationed near match screenings and activities. While your primary role is to support attendees, we will do our best to ensure volunteers have opportunities to enjoy the atmosphere.' },
+      { q: 'Will transportation be provided?', a: 'No. Volunteers are responsible for their own transportation. We aim to place volunteers in their home district whenever possible and encourage transit, biking, or walking.' },
+      { q: 'What if I have accessibility needs?', a: 'We are committed to inclusion and accessibility. You may share accommodation needs in your application. If you require assistance completing the application, please contact <a href="mailto:maraya.kenyguyer@lacity.org">maraya.kenyguyer@lacity.org</a>.' },
+      { q: 'Do I need to speak multiple languages?', a: 'Volunteers should be comfortable communicating in English. Additional language skills are deeply appreciated and welcomed.' },
+      { q: 'Why should I volunteer?', a: 'Celebrate your community, show civic pride, and be part of a global moment in LA. This program also serves as an early step toward future City-led events, including the 2028 Olympic and Paralympic Games.' },
+      { q: 'I love volunteering in my community — are there more opportunities out there?', a: 'Yes, we love that question! Explore additional City volunteer opportunities <a href="https://volunteer.lacity.gov/" target="_blank" rel="noopener">here</a>. If you want to get involved locally but only have a few hours, we encourage you to join a ShineLA event in your neighborhood.' }
+    ]
+  },
 
-function switchLang(lang) {
-  const dd = document.getElementById("lang-dropdown-menu");
-  if (dd) dd.classList.remove("open");
-  if (lang === 'en') {
-    document.cookie = "googtrans=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
-    document.cookie = "googtrans=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;domain=." + window.location.hostname;
-    window.location.reload();
-    return;
+  es: {
+    'nav-apply': 'Aplicar Ahora',
+    'hero-eyebrow': '⚽ Los Ángeles · 2026',
+    'hero-h1': 'Sé Voluntario en<br><em>Kick It</em><br>In the Park',
+    'hero-sub': 'Este verano, la Ciudad de Los Ángeles llevará fiestas gratuitas y familiares de la Copa Mundial a los centros de Recreación y Parques de toda la ciudad. Estamos lanzando un piloto de voluntarios en sitios seleccionados — ayúdanos a construir el modelo para futuros eventos mundiales.',
+    'hero-btn-primary': 'Aplicar Ahora',
+    'hero-btn-outline': 'Conoce los Roles de Voluntarios ↓',
+    'about-eyebrow': 'Sobre el Programa',
+    'about-title': 'Sobre el Voluntariado en Kick It In the Park',
+    'about-p1': 'Del 11 de junio al 19 de julio de 2026, la Ciudad organizará fiestas diarias de la Copa Mundial rotando entre diferentes sitios de Recreación y Parques de toda la ciudad.',
+    'about-activations-label': 'Las activaciones incluyen:',
+    'about-li-1': 'Transmisiones en vivo de los partidos',
+    'about-li-2': 'Clínicas de fútbol juvenil y actividades de habilidades',
+    'about-li-3': 'Zonas de diversión familiar',
+    'about-li-4': 'Mesas de recursos de la Ciudad y programación',
+    'about-learn-more': 'Aprende más sobre Kick It In the Park aquí →',
+    'about-locations-eyebrow': 'Ubicaciones Piloto y Fechas',
+    'about-locations-intro': 'El programa piloto de voluntarios se llevará a cabo en sitios seleccionados de Kick It In the Park en toda la ciudad, incluyendo:',
+    'about-signup-html': 'Si vives cerca, <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:none;font-weight:700;">¡regístrate para unirte!</a>',
+    'roles-eyebrow': 'Participa',
+    'roles-title': 'Roles de Voluntarios',
+    'roles-lead': 'Estamos reclutando dos tipos de voluntarios. Ambos roles son fundamentales para que cada celebración sea un éxito.',
+    'role1-badge': 'Alto Compromiso · Basado en el Vecindario',
+    'role1-title': 'Coordinadores Voluntarios Líderes de Distrito',
+    'role1-sub': 'Liderazgo Basado en el Vecindario',
+    'role1-li-1': 'Dar la bienvenida y guiar a los asistentes; ayudar a crear un ambiente inclusivo y positivo',
+    'role1-li-2': 'Apoyar y organizar a los voluntarios generales durante cada activación',
+    'role1-li-3': 'Ayudar a resolver problemas menores y escalar preocupaciones al personal de la Ciudad',
+    'role1-li-4': 'Representar a la Ciudad y tu vecindario con profesionalismo y orgullo',
+    'role1-ideal': 'Ideal para líderes comunitarios, voluntarios con experiencia e individuos cómodos en entornos públicos.',
+    'role2-badge': 'Flexible · En toda la Ciudad',
+    'role2-title': 'Voluntarios Generales',
+    'role2-sub': 'Apoyo el Día del Evento · Un Turno o Varios',
+    'role2-li-1': 'Recibir a los asistentes y proporcionar orientación',
+    'role2-li-2': 'Ayudar con la instalación y desmontaje del evento',
+    'role2-li-3': 'Ayudar con programación o mesas informativas',
+    'role2-li-4': 'Apoyar la accesibilidad y participación inclusiva',
+    'role2-ideal': 'Siempre que sea posible, los voluntarios serán asignados en su distrito de origen — aunque puede ser necesaria cierta flexibilidad para garantizar el personal completo en todos los sitios piloto.',
+    'expect-eyebrow': 'Antes de Aplicar',
+    'expect-title': 'Qué Esperar',
+    'expect-lead': 'Esto es lo que necesitas saber sobre el compromiso de tiempo, la elegibilidad y el entrenamiento antes de aplicar.',
+    'expect-card1-title': 'Compromiso de Tiempo',
+    'expect-card1-html': '<li><strong>Voluntarios Generales:</strong> ¡Regístrate para un turno o varios — tú decides! Los turnos son de aproximadamente 4 horas.</li><li style="margin-top:.4rem;"><strong>Líderes de Distrito:</strong> Cada distrito tendrá siete días de activación en total (aproximadamente uno cada cinco días). Pedimos que nuestros Líderes se comprometan con todos o casi todos los siete días para mayor consistencia.</li>',
+    'expect-card2-title': 'Elegibilidad',
+    'expect-card2-html': '<li>Debe tener 18 años o más.</li><li>Debe ser confiable y capaz de cumplir con los turnos confirmados.</li>',
+    'expect-card3-title': 'Entrenamiento',
+    'expect-card3-html': '<li>Todos los voluntarios seleccionados participarán en una breve capacitación virtual obligatoria en mayo.</li><li>La capacitación te preparará para tu rol y te ayudará a comprender las expectativas.</li>',
+    'expect-card4-title': 'Cómo Registrarse',
+    'expect-card4-html': '<li>Primero, completa un formulario de registro general y las exenciones requeridas para inscribirte como voluntario de Kick It In the Park.</li><li>Una vez aprobado por los organizadores, podrás registrarte para turnos específicos en tu distrito elegido.</li>',
+    'timeline-eyebrow': 'Cómo Funciona',
+    'timeline-title': 'Cronograma',
+    'timeline-lead': 'Así es como se ve el proceso desde el registro hasta el día del evento.',
+    'tl1-title': 'Abril – Principios de Mayo: Regístrate para Unirte',
+    'tl1-p': 'Cuéntanos sobre tu disponibilidad, preferencia de ubicación piloto, antecedentes y completa las exenciones necesarias — luego revisaremos y aprobaremos tu solicitud para que puedas registrarte en los turnos.',
+    'tl2-title': 'Mediados de Mayo: Confirmaciones de Roles y Asignaciones de Turno',
+    'tl2-p': 'Regístrate para turnos y roles. Confírmanos lo antes posible que estás disponible para unirte.',
+    'tl3-title': 'Finales de Mayo: Entrenamiento Obligatorio de Voluntarios',
+    'tl3-p': 'Sesiones de entrenamiento obligatorio de voluntarios, en formato virtual. Podríamos pedir a los Líderes de Distrito unirse a recorridos por su vecindario antes del evento.',
+    'tl4-title': 'Junio – Julio: Eventos Kick It In the Park',
+    'tl4-p': 'Aquí es cuando sales al campo y traes el orgullo comunitario a la vida. Los eventos se realizan del 11 de junio al 19 de julio de 2026.',
+    'why-eyebrow': 'Haz la Diferencia',
+    'why-title': '¿Por Qué Ser Voluntario?',
+    'why-lead': 'Más que una fiesta de partidos — esta es una oportunidad de ser parte de algo más grande.',
+    'why-1': 'Celebra tu vecindario',
+    'why-2': 'Conéctate con otros angelinos',
+    'why-3': 'Apoya a la juventud y las familias',
+    'why-4': 'Muestra tu amor por el fútbol',
+    'why-5': 'Sé parte de un momento histórico global',
+    'why-6': 'Ayuda a construir la red de voluntarios del futuro de la Ciudad',
+    'why-callout-html': 'Como proyecto piloto, este programa también sirve como un primer paso en la construcción de la infraestructura de voluntariado a largo plazo de Los Ángeles, antes de los <strong>Juegos Olímpicos y Paralímpicos de 2028</strong>. ¡Esperamos reactivar este grupo en los próximos años mientras nos preparamos para ser anfitriones a escala global!',
+    'perks-eyebrow': 'Regalos de Agradecimiento',
+    'perks-title': 'Beneficios del Voluntariado',
+    'perks-lead': 'Nuestra forma de decirte gracias por estar presente para tu ciudad.',
+    'perk-1': 'Ropa de voluntario de la marca Kick It In the Park',
+    'perk-2': 'Comida y bebida ligera durante tu turno',
+    'perk-3': 'Una comunidad de angelinos comprometidos con la ciudad',
+    'perk-4': 'Certificado de servicio (para quienes lo soliciten)',
+    'apply-eyebrow': '¿Listo para Unirte?',
+    'apply-title': 'Aplica para Ser Voluntario',
+    'apply-lead': 'Revisaremos las solicitudes y aprobaremos los roles para mediados de mayo para que puedas registrarte en los turnos. Estamos ansiosos por tenerte en el equipo.',
+    'apply-btn': 'Aplicar Ahora →',
+    'apply-questions-html': '¿Preguntas? Escribe a <a href="mailto:maraya.kenyguyer@lacity.org" style="color:var(--brand);font-weight:600;">maraya.kenyguyer@lacity.org</a>',
+    'faq-eyebrow': 'Preguntas Frecuentes',
+    'faq-title': 'Lo que Necesitas Saber',
+    'footer-brand-name': '<span aria-hidden="true">⚽</span> Kick It In the Park — Voluntario',
+    'footer-desc': 'Un programa de voluntarios de la Ciudad de Los Ángeles que apoya las celebraciones comunitarias de la Copa Mundial FIFA 2026. Producido en asociación con los Distritos del Concejo Municipal de Los Ángeles, Recreación y Parques de LA, y la Oficina del Alcalde.',
+    'footer-nav-title': 'En Esta Página',
+    'footer-nav-about': 'Sobre el Programa',
+    'footer-nav-roles': 'Roles de Voluntarios',
+    'footer-nav-expect': 'Qué Esperar',
+    'footer-nav-timeline': 'Cronograma',
+    'footer-nav-why': 'Por Qué Ser Voluntario',
+    'footer-nav-faq': 'Preguntas Frecuentes',
+    'footer-city-title': 'Recursos de la Ciudad',
+    'footer-copyright': '© 2026 Ciudad de Los Ángeles · Todos los Derechos Reservados',
+    'footer-translation-disclaimer': 'Esta página fue traducida con herramientas de traducción automatizada para ayudar a nuestra comunidad a acceder a información importante. Aunque nos esforzamos por ser precisos, pedimos disculpas por cualquier imperfección y le invitamos a comunicarse si necesita aclaración.',
+    faqs: [
+      { q: '¿Recibiré pago?', a: 'No. Esta es una oportunidad de voluntariado y no incluye compensación ni entradas a los partidos oficiales.' },
+      { q: '¿Es este el Programa Oficial de Voluntarios de la FIFA?', a: 'No. Este es un programa de voluntarios administrado por la Ciudad de Los Ángeles que apoya las celebraciones comunitarias en sitios del vecindario — no en sedes oficiales de la FIFA.' },
+      { q: '¿Hay un requisito mínimo de turnos?', a: 'Los Voluntarios Generales pueden registrarse para uno o varios turnos. Pedimos a los Coordinadores Líderes de Distrito que se comprometan con la mayor cantidad posible de los siete eventos en su distrito — ayudando a mantener consistencia en todas las activaciones.' },
+      { q: '¿Podré ver los partidos durante las celebraciones?', a: 'La mayoría de los voluntarios estarán ubicados cerca de las transmisiones y actividades. Si bien tu función principal es apoyar a los asistentes, haremos todo lo posible para que los voluntarios puedan disfrutar del ambiente.' },
+      { q: '¿Se proporcionará transporte?', a: 'No. Los voluntarios son responsables de su propio transporte. Intentamos ubicar a los voluntarios en su distrito de origen siempre que sea posible y fomentamos el uso del transporte público, la bicicleta o caminar.' },
+      { q: '¿Qué pasa si tengo necesidades de accesibilidad?', a: 'Estamos comprometidos con la inclusión y la accesibilidad. Puedes compartir tus necesidades de adaptación en tu solicitud. Si necesitas ayuda para completar la solicitud, comunícate con <a href="mailto:maraya.kenyguyer@lacity.org">maraya.kenyguyer@lacity.org</a>.' },
+      { q: '¿Necesito hablar varios idiomas?', a: 'Los voluntarios deben sentirse cómodos comunicándose en inglés. Las habilidades adicionales en otros idiomas son muy bienvenidas y apreciadas.' },
+      { q: '¿Por qué debería ser voluntario?', a: 'Celebra tu comunidad, muestra orgullo cívico y sé parte de un momento global en LA. Este programa también sirve como un primer paso hacia futuros eventos organizados por la Ciudad, incluidos los Juegos Olímpicos y Paralímpicos de 2028.' },
+      { q: 'Me encanta hacer voluntariado en mi comunidad — ¿hay más oportunidades?', a: 'Sí, nos encanta esa pregunta. Explora oportunidades adicionales de voluntariado de la Ciudad <a href="https://volunteer.lacity.gov/" target="_blank" rel="noopener">aquí</a>. Si quieres involucrarte localmente pero solo tienes unas pocas horas, te animamos a unirte a un evento ShineLA en tu vecindario.' }
+    ]
+  },
+
+  ko: {
+    'nav-apply': '지금 신청',
+    'hero-eyebrow': '⚽ 로스앤젤레스 · 2026',
+    'hero-h1': 'KICK IT IN THE PARK<br><em>자원봉사</em><br>참여하기',
+    'hero-sub': '이번 여름, 로스앤젤레스시는 시 전역의 공원 및 레크리에이션 센터에서 무료 가족 친화형 월드컵 응원 행사를 개최합니다. 우리는 일부 장소에서 자원봉사 시범 프로그램을 시작하며, 향후 글로벌 이벤트를 위한 모델을 함께 만들어갈 자원봉사자를 모집합니다.',
+    'hero-btn-primary': '지금 신청',
+    'hero-btn-outline': '봉사 역할 알아보기 ↓',
+    'about-eyebrow': '프로그램 소개',
+    'about-title': '킥 잇 인 더 파크 자원봉사 소개',
+    'about-p1': '2026년 6월 11일부터 7월 19일까지, 시에서는 도시 전역의 여러 레크리에이션 및 공원 장소를 순회하며 매일 월드컵 관람 파티를 개최합니다.',
+    'about-activations-label': '행사 내용:',
+    'about-li-1': '생중계 경기 관람',
+    'about-li-2': '청소년 축구 클리닉 및 기술 활동',
+    'about-li-3': '가족 친화적 놀이 공간',
+    'about-li-4': '시 행정 서비스 및 커뮤니티 정보 부스',
+    'about-learn-more': '킥 잇 인 더 파크에 대해 자세히 알아보기 →',
+    'about-locations-eyebrow': '파일럿 장소 및 날짜',
+    'about-locations-intro': '자원봉사 파일럿 프로그램은 도시 전역의 킥 잇 인 더 파크 선정 장소에서 진행되며, 다음을 포함합니다:',
+    'about-signup-html': '근처에 사신다면, <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:none;font-weight:700;">지금 함께하세요!</a>',
+    'roles-eyebrow': '참여하기',
+    'roles-title': '봉사자 역할',
+    'roles-lead': '두 가지 유형의 봉사자를 모집하고 있습니다. 두 역할 모두 각 행사를 성공적으로 만드는 데 중요합니다.',
+    'role1-badge': '높은 헌신도 · 지역 기반',
+    'role1-title': '지역구 담당 코디네이터 (리더 역할)',
+    'role1-sub': '지역 기반 리더십',
+    'role1-li-1': '참가자를 환영하고 안내하며, 포용적이고 긍정적인 분위기 조성',
+    'role1-li-2': '각 행사 중 일반 봉사자를 지원하고 조직',
+    'role1-li-3': '경미한 문제 해결을 돕고 우려사항을 시 직원에게 전달',
+    'role1-li-4': '전문성과 자부심을 가지고 시와 지역을 대표',
+    'role1-ideal': '커뮤니티 리더, 경험 있는 봉사자, 대중을 상대하는 환경에 익숙한 분들께 이상적입니다.',
+    'role2-badge': '유연함 · 도시 전체',
+    'role2-title': '일반 봉사자',
+    'role2-sub': '당일 지원 · 1회 또는 여러 번 교대 근무',
+    'role2-li-1': '참가자 맞이 및 안내 제공',
+    'role2-li-2': '행사 설치 및 철거 지원',
+    'role2-li-3': '프로그램 또는 테이블 운영 지원',
+    'role2-li-4': '접근성 및 포용적 참여 지원',
+    'role2-ideal': '가능한 경우 거주 지역 근처에 배정되지만, 전체 운을 위해 유연한 배치가 적용될 수 있습니다.',
+    'expect-eyebrow': '신청 전에',
+    'expect-title': '알아두어야 할 사항',
+    'expect-lead': '신청하기 전에 시간 헌신, 자격 요건 및 교육에 대해 알아야 할 사항입니다.',
+    'expect-card1-title': '시간',
+    'expect-card1-html': '<li><strong>일반 자원봉사자:</strong> 1회 또는 여러 회 선택 가능 (약 4시간씩)</li><li style="margin-top:.4rem;"><strong>리더 역할:</strong> 총 7회 행사 모두 또는 대부분 참여 권장</li>',
+    'expect-card2-title': '자격',
+    'expect-card2-html': '<li>만 18세 이상</li><li>신뢰할 수 있고 배정된 일정 참여 가능</li>',
+    'expect-card3-title': '교육',
+    'expect-card3-html': '<li>5월 중 온라인 교육 필수 참여</li><li>역할 및 현장 운영 안내 포함</li>',
+    'expect-card4-title': '신청 절차',
+    'expect-card4-html': '<li>기본 신청서 및 동의서 작성</li><li>승인 후 원하는 일정 선택 가능</li>',
+    'timeline-eyebrow': '진행 방식',
+    'timeline-title': '일정',
+    'timeline-lead': '등록부터 행사 당일까지의 과정입니다.',
+    'tl1-title': '4월 – 5월 초: 등록하기',
+    'tl1-p': '가용 여부, 선호 파일럿 장소, 경력, 필요한 서약서 작성 — 그 후 신청서를 검토하고 승인하여 교대 근무에 등록할 수 있게 해드립니다.',
+    'tl2-title': '5월 중순: 역할 확인 및 교대 배정',
+    'tl2-p': '교대 근무와 역할에 등록하세요. 가능한 한 빨리 참여 가능 여부를 확인해 주세요.',
+    'tl3-title': '5월 하순: 필수 봉사자 교육',
+    'tl3-p': '온라인으로 진행되는 필수 봉사자 교육 세션. 행사 전에 지구 담당 코디네이터에게 거주 지역 현장 방문을 요청할 수 있습니다.',
+    'tl4-title': '6월 – 7월: 킥 잇 인 더 파크 행사',
+    'tl4-p': '이때 경기장에 나가 커뮤니티의 자부심을 현실로 만드세요. 행사는 2026년 6월 11일부터 7월 19일까지 진행됩니다.',
+    'why-eyebrow': '변화를 만들어요',
+    'why-title': '왜 봉사해야 할까요?',
+    'why-lead': '단순한 관람 파티 이상 — 더 큰 무언가의 일부가 될 기회입니다.',
+    'why-1': '내 동네를 축하하세요',
+    'why-2': '로스앤젤레스 시민들과 연결되세요',
+    'why-3': '청소년과 가족을 지원하세요',
+    'why-4': '축구에 대한 사랑을 보여주세요',
+    'why-5': '역사적인 글로벌 순간의 일부가 되세요',
+    'why-6': '시의 미래 봉사자 네트워크 구축에 기여하세요',
+    'why-callout-html': '파일럿 프로그램으로서, 이 프로그램은 <strong>2028 올림픽 및 패럴림픽 대회</strong>를 앞두고 로스앤젤레스의 장기적인 봉사자 인프라를 구축하는 첫 번째 단계이기도 합니다. 글로벌 규모의 행사 준비를 위해 앞으로 몇 년간 이 그룹을 다시 활성화하기를 기대합니다!',
+    'perks-eyebrow': '감사의 선물',
+    'perks-title': '봉사자 혜택',
+    'perks-lead': '도시를 위해 나서준 것에 감사드리는 방법입니다.',
+    'perk-1': '킥 잇 인 더 파크 브랜드 봉사자 의류',
+    'perk-2': '교대 근무 중 간단한 음식 및 음료',
+    'perk-3': '시민 의식 있는 로스앤젤레스 시민 커뮤니티',
+    'perk-4': '봉사 인증서 (요청하는 분에게)',
+    'apply-eyebrow': '함께할 준비가 됐나요?',
+    'apply-title': '봉사자 신청하기',
+    'apply-lead': '신청서를 검토하고 5월 중순까지 역할을 승인하여 교대 근무에 등록할 수 있게 해드립니다. 팀에 합류하기를 기대합니다.',
+    'apply-btn': '지금 신청 →',
+    'apply-questions-html': '문의 사항? <a href="mailto:maraya.kenyguyer@lacity.org" style="color:var(--brand);font-weight:600;">maraya.kenyguyer@lacity.org</a>로 연락해 주세요.',
+    'faq-eyebrow': '자주 묻는 질문',
+    'faq-title': '알아야 할 것들',
+    'footer-brand-name': '<span aria-hidden="true">⚽</span> 킥 잇 인 더 파크 — 봉사자',
+    'footer-desc': '2026 FIFA 월드컵 지역 커뮤니티 행사를 지원하는 로스앤젤레스시 봉사자 프로그램. LA 시의회 지구, LA 레크리에이션 및 공원, 시장실과의 파트너십으로 진행됩니다.',
+    'footer-nav-title': '이 페이지에서',
+    'footer-nav-about': '프로그램 소개',
+    'footer-nav-roles': '봉사자 역할',
+    'footer-nav-expect': '기대할 것들',
+    'footer-nav-timeline': '일정',
+    'footer-nav-why': '봉사 이유',
+    'footer-nav-faq': '자주 묻는 질문',
+    'footer-city-title': '시 자원',
+    'footer-copyright': '© 2026 로스앤젤레스시 · 모든 권리 보유',
+    'footer-translation-disclaimer': '이 페이지는 지역 사회가 중요한 정보에 접근할 수 있도록 자동 번역 도구를 사용하여 번역되었습니다. 정확성을 위해 노력하지만 부족한 부분이 있을 수 있으며, 명확한 설명이 필요하시면 언제든지 연락해 주시기 바랍니다.',
+    faqs: [
+      { q: '급여가 있나요?', a: '아니요. 이것은 봉사 기회이며 공식 경기 입장권이나 보상을 포함하지 않습니다.' },
+      { q: '공식 FIFA 봉사자 프로그램인가요?', a: '아니요. 이것은 공식 FIFA 경기장이 아닌 지역 장소에서의 커뮤니티 행사를 지원하는 로스앤젤레스시 봉사자 프로그램입니다.' },
+      { q: '최소 교대 근무 요건이 있나요?', a: '일반 봉사자는 1회 또는 여러 교대 근무에 등록할 수 있습니다. 지구 담당 코디네이터는 지구 내 7개 행사 중 최대한 많이 참여해 주시길 요청드립니다 — 행사 전반에 걸쳐 일관성을 유지하는 데 도움이 됩니다.' },
+      { q: '행사 중에 경기를 관람할 수 있나요?', a: '대부분의 봉사자는 경기 중계 및 활동 근처에 배치됩니다. 주요 역할은 참가자를 지원하는 것이지만, 봉사자들이 분위기를 즐길 수 있도록 최선을 다하겠습니다.' },
+      { q: '교통편이 제공되나요?', a: '아니요. 봉사자는 직접 교통수단을 준비해야 합니다. 가능한 경우 봉사자를 거주 지구에 배치하며, 대중교통, 자전거 또는 도보 이용을 권장합니다.' },
+      { q: '접근성 요구 사항이 있다면 어떻게 하나요?', a: '포용성과 접근성을 위해 최선을 다하고 있습니다. 신청서에 편의 필요 사항을 기재하실 수 있습니다. 신청서 작성에 도움이 필요하신 경우 <a href="mailto:maraya.kenyguyer@lacity.org">maraya.kenyguyer@lacity.org</a>로 연락해 주세요.' },
+      { q: '여러 언어를 구사해야 하나요?', a: '봉사자는 영어로 소통할 수 있어야 합니다. 추가 언어 능력은 매우 환영합니다.' },
+      { q: '왜 봉사해야 할까요?', a: '커뮤니티를 축하하고, 시민 자부심을 보이며, LA의 글로벌 순간의 일부가 되세요. 이 프로그램은 2028 올림픽 및 패럴림픽 대회를 포함한 미래 시 주관 행사를 향한 첫 번째 단계이기도 합니다.' },
+      { q: '커뮤니티 봉사를 좋아합니다 — 더 많은 기회가 있나요?', a: '네, 정말 좋은 질문입니다! 추가 시 봉사 기회를 <a href="https://volunteer.lacity.gov/" target="_blank" rel="noopener">여기</a>에서 탐색하세요. 몇 시간만 투자할 수 있다면, 가까운 동네 ShineLA 행사에 참여해 보세요.' }
+    ]
+  },
+
+  'zh-TW': {
+    'nav-apply': '立即報名',
+    'hero-eyebrow': '⚽ 洛杉磯 · 2026',
+    'hero-h1': '加入<br><em>踢球在公園</em><br>志工行列',
+    'hero-sub': '今年夏天，洛杉磯市將在全市各地的康樂及公園中心舉辦免費的家庭友好世界盃觀賽派對。我們正在精選場地啟動志工試點計畫——協助我們為未來的全球活動建立模式。',
+    'hero-btn-primary': '立即報名',
+    'hero-btn-outline': '了解志工角色 ↓',
+    'about-eyebrow': '關於計畫',
+    'about-title': '關於踢球在公園的志工服務',
+    'about-p1': '2026年6月11日至7月19日，市政府將在全市不同康樂及公園場地輪流舉辦每日世界盃觀賽派對。',
+    'about-activations-label': '活動內容包括：',
+    'about-li-1': '現場轉播觀賽',
+    'about-li-2': '青少年足球訓練及技能活動',
+    'about-li-3': '親子同樂區',
+    'about-li-4': '市政資源展台及節目',
+    'about-learn-more': '了解更多關於踢球在公園的資訊 →',
+    'about-locations-eyebrow': '試點地點及日期',
+    'about-locations-intro': '志工試點計畫將在全市精選的踢球在公園場地舉行，包括：',
+    'about-signup-html': '如果您住在附近，<a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:none;font-weight:700;">立即報名加入我們！</a>',
+    'roles-eyebrow': '參與其中',
+    'roles-title': '志工角色',
+    'roles-lead': '我們正在招募兩類志工。兩種角色對每場慶典的成功都至關重要。',
+    'role1-badge': '高度承諾 · 以社區為基礎',
+    'role1-title': '地區志工協調員',
+    'role1-sub': '以社區為基礎的領導',
+    'role1-li-1': '歡迎並引導與會者；協助營造包容、正面的氛圍',
+    'role1-li-2': '在每次活動中支援和組織一般志工',
+    'role1-li-3': '協助解決小問題並向市府人員匯報問題',
+    'role1-li-4': '以專業精神和自豪感代表城市和社區',
+    'role1-ideal': '適合社區領袖、有經驗的志工，以及在公眾場合自在的人士。',
+    'role2-badge': '靈活 · 全市',
+    'role2-title': '一般志工',
+    'role2-sub': '活動當日支援 · 一班或多班',
+    'role2-li-1': '迎接與會者並提供指引',
+    'role2-li-2': '協助活動佈置和清場',
+    'role2-li-3': '協助活動節目或展台',
+    'role2-li-4': '支援無障礙及共融參與',
+    'role2-ideal': '我們盡可能將志工分配到其居住地區——但可能需要一定的靈活性，以確保所有試點場地均有充足人手。',
+    'expect-eyebrow': '報名前須知',
+    'expect-title': '活動須知',
+    'expect-lead': '以下是申請前您需要了解的時間承諾、資格條件和培訓相關事項。',
+    'expect-card1-title': '時間承諾',
+    'expect-card1-html': '<li><strong>一般志工：</strong>可報名一班或多班——由您決定！每班約4小時。</li><li style="margin-top:.4rem;"><strong>地區協調員：</strong>每個地區將有七個活動日（約每五天一次）。我們希望協調員能承諾出席全部或幾乎所有七天，以確保一致性。</li>',
+    'expect-card2-title': '資格條件',
+    'expect-card2-html': '<li>須年滿18歲。</li><li>須可靠並能履行已確認的班次。</li>',
+    'expect-card3-title': '培訓',
+    'expect-card3-html': '<li>所有入選志工將於五月參加簡短的必修線上培訓。</li><li>培訓將協助您準備好自己的角色並了解相關期望。</li>',
+    'expect-card4-title': '報名方式',
+    'expect-card4-html': '<li>首先，填寫一般報名表及所需免責聲明，完成踢球在公園志工的初步登記。</li><li>經主辦方審批後，您將可以報名您所選地區的特定班次。</li>',
+    'timeline-eyebrow': '流程說明',
+    'timeline-title': '時間表',
+    'timeline-lead': '以下是從報名到活動當日的整個流程。',
+    'tl1-title': '四月至五月初：報名加入',
+    'tl1-p': '告訴我們您的空閒時間、試點地點偏好、背景，並完成所需的免責聲明——我們將審核並批准您的申請，讓您可以報名班次。',
+    'tl2-title': '五月中：角色確認及班次分配',
+    'tl2-p': '報名班次和角色。請盡快確認您是否能夠參加。',
+    'tl3-title': '五月下旬：必修志工培訓',
+    'tl3-p': '線上進行的必修志工培訓課程。我們可能會邀請地區協調員在活動前參加其所在地區的場地導覽。',
+    'tl4-title': '六月至七月：踢球在公園活動',
+    'tl4-p': '這是您踏上球場、讓社區自豪感活現的時刻。活動從2026年6月11日舉行至7月19日。',
+    'why-eyebrow': '創造改變',
+    'why-title': '為何參與志工？',
+    'why-lead': '不僅僅是一場觀賽派對——這是成為更大事業一分子的機會。',
+    'why-1': '慶祝您的社區',
+    'why-2': '與洛杉磯市民連結',
+    'why-3': '支持青少年和家庭',
+    'why-4': '展現您對足球的熱愛',
+    'why-5': '成為歷史性全球時刻的一部分',
+    'why-6': '協助塑造城市未來的志工網絡',
+    'why-callout-html': '作為試點，本計畫也是在<strong>2028年奧運及帕運</strong>之前，建立洛杉磯長期志工基礎設施的重要第一步。我們希望在未來幾年重新啟動這個群體，為主辦全球規模賽事做好準備！',
+    'perks-eyebrow': '感謝禮品',
+    'perks-title': '志工福利',
+    'perks-lead': '我們向您致謝，感謝您為城市出力。',
+    'perk-1': '踢球在公園品牌志工服裝',
+    'perk-2': '班次期間提供輕食及飲料',
+    'perk-3': '一群熱心公益的洛杉磯市民社群',
+    'perk-4': '服務證書（按需求提供）',
+    'apply-eyebrow': '準備加入？',
+    'apply-title': '申請成為志工',
+    'apply-lead': '我們將審核申請並於五月中批准角色，讓您可以報名班次。期待您加入團隊。',
+    'apply-btn': '立即報名 →',
+    'apply-questions-html': '有疑問？請發送電郵至 <a href="mailto:maraya.kenyguyer@lacity.org" style="color:var(--brand);font-weight:600;">maraya.kenyguyer@lacity.org</a>',
+    'faq-eyebrow': '常見問題',
+    'faq-title': '您需要了解的事項',
+    'footer-brand-name': '<span aria-hidden="true">⚽</span> 踢球在公園 — 志工',
+    'footer-desc': '洛杉磯市志工計畫，支援2026年FIFA世界盃社區慶典。由洛杉磯市議會各地區、洛杉磯康樂及公園局及市長辦公室共同合作推出。',
+    'footer-nav-title': '本頁內容',
+    'footer-nav-about': '關於計畫',
+    'footer-nav-roles': '志工角色',
+    'footer-nav-expect': '活動須知',
+    'footer-nav-timeline': '時間表',
+    'footer-nav-why': '為何參與志工',
+    'footer-nav-faq': '常見問題',
+    'footer-city-title': '市政資源',
+    'footer-copyright': '© 2026 洛杉磯市 · 版權所有',
+    'footer-translation-disclaimer': '本頁面使用自動翻譯工具進行翻譯，以幫助我們的社區獲取重要資訊。雖然我們努力確保準確性，但對任何不完善之處深感抱歉，歡迎您如需澄清隨時與我們聯繫。',
+    faqs: [
+      { q: '我會獲得報酬嗎？', a: '不會。這是一個志工機會，不包括薪酬或官方比賽門票。' },
+      { q: '這是FIFA官方志工計畫嗎？', a: '不是。這是洛杉磯市主辦的志工計畫，支援社區場地的慶典活動——並非官方FIFA場館。' },
+      { q: '有最低班次要求嗎？', a: '一般志工可報名一個或多個班次。我們希望地區協調員盡可能參加其所在地區七個活動中的多個——有助於保持各活動的一致性。' },
+      { q: '我可以在慶典期間觀看比賽嗎？', a: '大多數志工將被安排在轉播和活動附近。雖然您的主要職責是支援與會者，但我們會盡力確保志工也有機會享受現場氣氛。' },
+      { q: '會提供交通嗎？', a: '不會。志工需自行安排交通。我們盡可能將志工安排在其居住地區，並鼓勵乘搭公共交通、騎車或步行。' },
+      { q: '如果我有無障礙需求怎麼辦？', a: '我們致力於包容和無障礙服務。您可以在申請表中說明您的特殊需求。如需協助填寫申請表，請聯絡 <a href="mailto:maraya.kenyguyer@lacity.org">maraya.kenyguyer@lacity.org</a>。' },
+      { q: '我需要會說多種語言嗎？', a: '志工應能以英語溝通。其他語言能力非常受歡迎。' },
+      { q: '為何應該參與志工？', a: '慶祝您的社區，展現公民自豪感，成為洛杉磯全球時刻的一分子。本計畫也是邁向未來市政活動（包括2028年奧運及帕運）的重要第一步。' },
+      { q: '我喜歡在社區做志工——還有其他機會嗎？', a: '有的，我們很高興您問到這個！在<a href="https://volunteer.lacity.gov/" target="_blank" rel="noopener">這裡</a>探索更多市政志工機會。如果您想在當地參與但只有幾個小時，我們鼓勵您參加您所在社區的ShineLA活動。' }
+    ]
+  },
+
+  hy: {
+    'nav-apply': 'Դիմել',
+    'hero-eyebrow': '⚽ Լոս Անջելես · 2026',
+    'hero-h1': 'Կամավոր եղիր<br><em>Kick It</em><br>In the Park-ում',
+    'hero-sub': 'Այս ամառ Լոս Անջելես քաղաքը անվճար, ընտանեկան Աշխարհի Գավաթի դիտախաղ-հանդիպումներ կիրականացնի ողջ քաղաքի հանգստի եւ այգիների կենտրոններում: Մենք կամավորական փորձնական ծրագիր ենք սկսում ընտրված կայքերում — օգնիր մեզ ստեղծել ապագա գլոբալ իրադարձությունների մոդելը:',
+    'hero-btn-primary': 'Դիմել',
+    'hero-btn-outline': 'Ծանոթացիր կամավոր դերերին ↓',
+    'about-eyebrow': 'Ծրագրի Մասին',
+    'about-title': 'Kick It In the Park-ում Կամավորության Մասին',
+    'about-p1': '2026 թ. հունիսի 11-ից հուլիսի 19-ը Քաղաքը կանցկացնի ամենօրյա Աշխարհի Գավաթի դիտախաղ-հանդիպումներ՝ ողջ քաղաքի Հանգստի եւ Այգիների տարբեր կայքերում:',
+    'about-activations-label': 'Ակտիվացումները ներառում են.',
+    'about-li-1': 'Ուղիղ հեռարձակումներ',
+    'about-li-2': 'Պատանեկան ֆուտբոլի ակումբներ եւ հմտությունների ակտիվություններ',
+    'about-li-3': 'Ընտանեկան ժամանցի գոտիներ',
+    'about-li-4': 'Քաղաքային ռեսուրսների սեղաններ եւ ծրագրեր',
+    'about-learn-more': 'Ծանոթացիր Kick It In the Park-ի մասին ավելին →',
+    'about-locations-eyebrow': 'Փորձնական Վայրեր և Ամսաթվեր',
+    'about-locations-intro': 'Կամավոր փորձնական ծրագիրը կանցկացվի ողջ քաղաքում ընտրված Kick It In the Park կայքերում, ներառյալ.',
+    'about-signup-html': 'Եթե ապրում ես մոտ, <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:none;font-weight:700;">գրանցվիր, որ մեզ միանաս!</a>',
+    'roles-eyebrow': 'Ներգրավվիր',
+    'roles-title': 'Կամավոր Դերեր',
+    'roles-lead': 'Մենք հավաքագրում ենք կամավորների երկու տեսակ: Երկու դերերն էլ կարեւոր են յուրաքանչյուր տոնախմբության հաջողության համար:',
+    'role1-badge': 'Բարձր Հանձնառություն · Թաղամաս Հիմնված',
+    'role1-title': 'Շրջանի Կամավոր Կոորդինատորներ',
+    'role1-sub': 'Թաղամաս Հիմնված Առաջնորդություն',
+    'role1-li-1': 'Ողջունել եւ ուղղորդել մասնակիցներին. օգնել ստեղծել ներառական, դրական մթնոլորտ',
+    'role1-li-2': 'Աջակցել եւ կազմակերպել ընդհանուր կամավորներին յուրաքանչյուր ակտիվացման ժամանակ',
+    'role1-li-3': 'Օգնել լուծել փոքր խնդիրներ եւ հաղորդել անհանգստությունները Քաղաքի անձնակազմին',
+    'role1-li-4': 'Ներկայացնել Քաղաքն ու ձեր թաղամասը մասնագիտականությամբ եւ հպարտությամբ',
+    'role1-ideal': 'Իդեալական է համայնքային առաջնորդների, փորձառու կամավորների եւ հանրությանն ուղղված միջավայրերում հանգիստ մարդկանց համար:',
+    'role2-badge': 'Ճկուն · Ողջ Քաղաքում',
+    'role2-title': 'Ընդհանուր Կամավորներ',
+    'role2-sub': 'Օրվա Աջակցություն · Մեկ կամ Բազմաթիվ Հերթափոխ',
+    'role2-li-1': 'Ողջունել մասնակիցներին եւ ուղղորդում ապահովել',
+    'role2-li-2': 'Աջակցել միջոցառման կազմակերպմանը եւ ապամոնտաժմանը',
+    'role2-li-3': 'Աջակցել ծրագրավորմանը կամ ցուցադրությանը',
+    'role2-li-4': 'Աջակցել մատչելիությանը եւ ներառական ներգրավմանը',
+    'role2-ideal': 'Հնարավորինս, կամավորները կտեղակայվեն իրենց բնակության շրջանում — թեեւ կարող է անհրաժեշտ լինել ճկունություն՝ ապահովելու բոլոր փորձնական կայքերի լրիվ կազմը:',
+    'expect-eyebrow': 'Դիմելուց Առաջ',
+    'expect-title': 'Ինչ Սպասել',
+    'expect-lead': 'Ահա թե ինչ կարիք կա իմանալ ժամանակի հանձնառության, իրավասության եւ վերապատրաստման մասին մինչ դիմելը:',
+    'expect-card1-title': 'Ժամանակի Հանձնառություն',
+    'expect-card1-html': '<li><strong>Ընդհանուր Կամավորներ.</strong> Գրանցվեք մեկ կամ մի քանի հերթափոխի — ձեր ընտրությունը: Հերթափոխերը մոտ 4 ժամ են:</li><li style="margin-top:.4rem;"><strong>Շրջանի Կոորդինատորներ.</strong> Յուրաքանչյուր շրջան կունենա ընդհանուր յոթ ակտիվացման օր (մոտ հինգ օրն մեկ): Մենք խնդրում ենք Կոորդինատորներին հանձնառու լինել բոլոր կամ գրեթե բոլոր յոթ օրվա ընթացքում՝ հետեւողականության համար:</li>',
+    'expect-card2-title': 'Իրավասություն',
+    'expect-card2-html': '<li>Պետք է լինի 18 տարեկան կամ ավելի:</li><li>Պետք է լինի հուսալի եւ կարողանա կատարել հաստատված հերթափոխերը:</li>',
+    'expect-card3-title': 'Վերապատրաստում',
+    'expect-card3-html': '<li>Բոլոր ընտրված կամավորները կմասնակցեն Մայիսին անցկացվող կարճ պարտադիր վիրտուալ վերապատրաստմանը:</li><li>Վերապատրաստումը կնախապատրաստի ձեզ ձեր դերի համար եւ կօգնի հասկանալ ակնկալիքները:</li>',
+    'expect-card4-title': 'Ինչպես Գրանցվել',
+    'expect-card4-html': '<li>Նախ, լրացրեք ընդհանուր գրանցման ձևաթուղթ եւ անհրաժեշտ հայտարարությունները՝ Kick It In the Park կամավոր դառնալու համար:</li><li>Կազմակերպիչների կողմից հաստատվելուց հետո կարող եք գրանցվել ձեր ընտրած շրջանի կոնկրետ հերթափոխերի:</li>',
+    'timeline-eyebrow': 'Ինչպես Է Դա Աշխատում',
+    'timeline-title': 'Ժամանակացույց',
+    'timeline-lead': 'Ահա թե ինչ տեսք ունի գործընթացը՝ գրանցումից մինչ խաղի օր:',
+    'tl1-title': 'Ապրիլ – Մայիս Սկիզբ. Գրանցվիր Մասնակցելու',
+    'tl1-p': 'Պատմեք մեզ ձեր հասանելիության, փորձնական վայրի նախընտրության, ծագման մասին եւ ստորագրեք անհրաժեշտ հայտարարությունները — ապա կվերանայենք եւ կհաստատենք ձեր դիմումը, որպեսզի կարողանաք գրանցվել հերթափոխերի:',
+    'tl2-title': 'Մայիս Կեսեր. Դերերի Հաստատում & Հերթափոխի Հատկացում',
+    'tl2-p': 'Գրանցվեք հերթափոխերի եւ դերի: Հնարավորինս շուտ հաստատեք, որ կարող եք միանալ:',
+    'tl3-title': 'Մայիս Վերջ. Պարտադիր Կամավոր Վերապատրաստում',
+    'tl3-p': 'Պարտադիր կամավոր վերապատրաստման նիստեր, հասանելի վիրտուալ ձեւաչափով: Կարող ենք Շրջանի Կոորդինատորներին խնդրել միանալ ձեր թաղամասում կայքերի ուղեկցությունների:',
+    'tl4-title': 'Հունիս – Հուլիս. Kick It In the Park Միջոցառումներ',
+    'tl4-p': 'Այս է, երբ դուք դուրս կգաք դաշտ եւ համայնքի հպարտությունը կկյանք բերեք: Միջոցառումները կանցկացվեն 2026 թ. հունիսի 11-ից հուլիսի 19-ը:',
+    'why-eyebrow': 'Ազդեցություն Ունեցիր',
+    'why-title': 'Ինչու՞ Կամավոր Լինել?',
+    'why-lead': 'Ավելին, քան դիտախաղ-հանդիպում — սա ավելի մեծ բանի մաս դառնալու հնարավորություն է:',
+    'why-1': 'Տոնեք ձեր թաղամասը',
+    'why-2': 'Կապ հաստատեք Լոս Անջելեսի բնակիչների հետ',
+    'why-3': 'Աջակցեք երիտասարդությանը եւ ընտանիքներին',
+    'why-4': 'Ցուցաբերեք ձեր սերը ֆուտբոլ խաղի հանդեպ',
+    'why-5': 'Պատմական գլոբալ պահի մաս կազմեք',
+    'why-6': 'Օգնեք ձեւավորել Քաղաքի ապագա կամավոր ցանցը',
+    'why-callout-html': 'Որպես փորձնական, այս ծրագիրը նաեւ ծառայում է որպես Լոս Անջելեսի երկարաժամկետ կամավոր ենթակառուցվածքի ստեղծման վաղ քայլ՝ մինչ <strong>2028 Օլիմպիական եւ Պարաօլիմպիական Խաղեր</strong>: Մենք հուսով ենք ակտիվացնել այս խումբը գալիք տարիներին, երբ պատրաստվում ենք ընդունելու գլոբալ մասշտաբով:',
+    'perks-eyebrow': 'Շնորհակալական Նվերներ',
+    'perks-title': 'Կամավոր Արտոնություններ',
+    'perks-lead': 'Մեր ձեւը՝ ասելու շնորհակալություն, որ կողքին կանգնեցիր ձեր քաղաքին:',
+    'perk-1': 'Kick It In the Park բրենդավորված կամավոր հագուստ',
+    'perk-2': 'Թեթեւ կերակուր եւ ըմպելիք հերթափոխի ժամանակ',
+    'perk-3': 'Քաղաքացիական գիտակցությամբ օժտված Լոս Անջելեսի բնակիչների համայնք',
+    'perk-4': 'Ծառայության հավաստագիր (նրանց համար, ովքեր կխնդրեն)',
+    'apply-eyebrow': 'Պատրա՞ստ Ես Միանալու?',
+    'apply-title': 'Դիմի՛ Կամավոր Լինելու Համար',
+    'apply-lead': 'Մենք կվերանայենք հայտերը եւ Մայիս կեսերին կհաստատենք դերերը, որպեսզի կարողանաք գրանցվել հերթափոխերի: Անհամբեր սպասում ենք ձեզ թիմում:',
+    'apply-btn': 'Դիմել →',
+    'apply-questions-html': 'Հարցե՞ր. Գրեք <a href="mailto:maraya.kenyguyer@lacity.org" style="color:var(--brand);font-weight:600;">maraya.kenyguyer@lacity.org</a>',
+    'faq-eyebrow': 'Հաճախ Տրվող Հարցեր',
+    'faq-title': 'Ինչ Կարիք Ունեք Իմանալու',
+    'footer-brand-name': '<span aria-hidden="true">⚽</span> Kick It In the Park — Կամավոր',
+    'footer-desc': 'Լոս Անջելես Քաղաքի կամավոր ծրագիր, որն աջակցում է 2026 FIFA Աշխարհի Գավաթի համայնքային տոնախմբություններին: Արտադրվել է Լոս Անջելեսի Քաղաքային Խորհրդի Շրջանների, ԼԱ Հանգստի եւ Այգիների, եւ Քաղաքապետի Գրասենյակի հետ համագործակցությամբ:',
+    'footer-nav-title': 'Այս Էջում',
+    'footer-nav-about': 'Ծրագրի Մասին',
+    'footer-nav-roles': 'Կամավոր Դերեր',
+    'footer-nav-expect': 'Ինչ Սպասել',
+    'footer-nav-timeline': 'Ժամանակացույց',
+    'footer-nav-why': 'Ինչու Կամավոր Լինել',
+    'footer-nav-faq': 'ՀՏՀ',
+    'footer-city-title': 'Քաղաքային Ռեսուրսներ',
+    'footer-copyright': '© 2026 Լոս Անջելես Քաղաք · Բոլոր Իրավունքները Պաշտպանված Են',
+    'footer-translation-disclaimer': 'Այս էջը թարգմանվել է ավտոմատ թարգմանչական գործիքների միջոցով՝ մեր համայնքին կարևոր տեղեկատվություն հասանելի դարձնելու համար։ Թեև ձգտում ենք ճշգրտության, ներողություն ենք խնդրում ցանկացած անկատարության համար և հրավիրում ենք ձեզ կապ հաստատել, եթե կարիք ունեք պարզաբանման։',
+    faqs: [
+      { q: 'Կվճարե՞ն ինձ:', a: 'Ոչ: Սա կամավոր հնարավորություն է եւ չի ներառում փոխհատուցում կամ պաշտոնական խաղերի մուտքագրեր:' },
+      { q: 'Սա FIFA-ի Պաշտոնական Կամավոր Ծրագի՞րն է:', a: 'Ոչ: Սա Լոս Անջելես Քաղաքի կողմից վարվող կամավոր ծրագիր է, որն աջակցում է համայնքային կայքերում կազմակերպված տոնախմբություններին — ոչ FIFA-ի պաշտոնական կայքերում:' },
+      { q: 'Կա՞ հերթափոխի նվազագույն պահանջ:', a: 'Ընդհանուր Կամավորները կարող են գրանցվել մեկ կամ մի քանի հերթափոխի: Մենք խնդրում ենք Շրջանի Կոորդինատորներին հնարավորինս շատ ներկա լինել իրենց շրջանի յոթ միջոցառումներից — ինչը կօգնի ապահովել ակտիվացումների ողջ ընթացքում հետեւողականությունը:' },
+      { q: 'Կարո՞ղ եմ դիտել խաղերը տոնախմբությունների ժամանակ:', a: 'Կամավորների մեծ մասը կտեղակայվի խաղի հեռարձակումների եւ ակտիվությունների մոտ: Թեեւ ձեր հիմնական դերը մասնակիցներին աջակցելն է, կփորձենք ապահովել, որ կամավորները հնարավորություն ունենան վայելելու մթնոլորտը:' },
+      { q: 'Կապահովվի՞ տրանսպորտ:', a: 'Ոչ: Կամավորները պատասխանատու են իրենց տրանսպորտի համար: Հնարավորինս կփորձենք կամավորներին տեղակայել իրենց բնակության շրջանում եւ խրախուսում ենք հասարակական տրանսպորտի, հեծանիվի կամ ոտքի օգտագործումը:' },
+      { q: 'Ի՞նչ եթե ունեմ հասանելիության կարիքներ:', a: 'Մենք հանձնառու ենք ներառմանը եւ հասանելիությանը: Կարող եք կիսվել հարմարեցման կարիքներով ձեր դիմումում: Եթե դիմումի ձեւաթղթի լրացման ժամանակ կարիք ունեք օգնության, խնդրում ենք կապ հաստատել <a href="mailto:maraya.kenyguyer@lacity.org">maraya.kenyguyer@lacity.org</a>-ի հետ:' },
+      { q: 'Կարի՞ք ունեմ մի քանի լեզու իմանալու:', a: 'Կամավորները պետք է հանգիստ հաղորդակցվեն անգլերենով: Լրացուցիչ լեզվական հմտությունները շատ ողջունելի են:' },
+      { q: 'Ինչու՞ կամավոր լինեմ:', a: 'Տոնեք ձեր համայնքը, ցուցաբերեք քաղաքացիական հպարտություն եւ Լոս Անջելեսի գլոբալ պահի մաս կազմեք: Այս ծրագիրը նաեւ ծառայում է որպես ապագա Քաղաքի կողմից կազմակերպված միջոցառումների, ներառյալ 2028 Օլիմպիական եւ Պարաօլիմպիական Խաղերի, նախնական քայլ:' },
+      { q: 'Ինձ դուր է գալիս կամավոր լինել իմ համայնքում — կա՞ն ավելի շատ հնարավորություններ:', a: 'Այո, ուրախ ենք, որ հարցնում ես: Ծանոթացիր Քաղաքի լրացուցիչ կամավոր հնարավորություններին <a href="https://volunteer.lacity.gov/" target="_blank" rel="noopener">այստեղ</a>: Եթե ցանկանում ես ներգրավվել տեղական մակարդակով, բայց ունես ընդամենը մի քանի ժամ, խրախուսում ենք մասնակցել ձեր թաղամասի ShineLA միջոցառմանը:' }
+    ]
+  },
+
+  tl: {
+    'nav-apply': 'Mag-apply Ngayon',
+    'hero-eyebrow': '⚽ Los Angeles · 2026',
+    'hero-h1': 'Mag-volunteer para sa<br><em>Kick It</em><br>In the Park',
+    'hero-sub': 'Ngayong tag-araw, ang Lungsod ng Los Angeles ay magdadala ng libreng, pamilya-friendly na mga watch party ng Copa Mundial sa mga Rec & Park center sa buong lungsod. Naglulunsad kami ng volunteer pilot sa mga piling lugar — tulungan kaming bumuo ng modelo para sa mga susunod na pandaigdigang kaganapan.',
+    'hero-btn-primary': 'Mag-apply Ngayon',
+    'hero-btn-outline': 'Alamin ang mga Tungkulin ng Volunteer ↓',
+    'about-eyebrow': 'Tungkol sa Programa',
+    'about-title': 'Tungkol sa Pag-volunteer sa Kick It In the Park',
+    'about-p1': 'Mula Hunyo 11 hanggang Hulyo 19, 2026, magho-host ang Lungsod ng mga araw-araw na watch party ng Copa Mundial na magpapalipat-lipat sa iba\'t ibang lugar ng Recreation & Parks sa buong lungsod.',
+    'about-activations-label': 'Kasama sa mga aktibidad:',
+    'about-li-1': 'Live na pagsasahimpapawid ng mga laro',
+    'about-li-2': 'Mga soccer clinic at aktibidad para sa kabataan',
+    'about-li-3': 'Mga fun zone para sa pamilya',
+    'about-li-4': 'Mga mesa ng serbisyo ng Lungsod at programa',
+    'about-learn-more': 'Alamin ang higit pa tungkol sa Kick It In the Park dito →',
+    'about-locations-eyebrow': 'Mga Pilot na Lokasyon at Petsa',
+    'about-locations-intro': 'Ang volunteer pilot program ay magaganap sa mga piling lugar ng Kick It In the Park sa buong lungsod, kabilang ang:',
+    'about-signup-html': 'Kung nakatira ka sa malapit, <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:none;font-weight:700;">mag-sign up para sumali sa amin!</a>',
+    'roles-eyebrow': 'Makiisa',
+    'roles-title': 'Mga Tungkulin ng Volunteer',
+    'roles-lead': 'Nag-rerekruta kami ng dalawang uri ng mga volunteer. Parehong tungkulin ay mahalaga para gawing matagumpay ang bawat pagdiriwang.',
+    'role1-badge': 'Mataas na Pangako · Batay sa Kapitbahayan',
+    'role1-title': 'Mga District Lead Volunteer Coordinator',
+    'role1-sub': 'Pamumuno Batay sa Kapitbahayan',
+    'role1-li-1': 'Tanggapin at gabayan ang mga dadalo; tulungan na lumikha ng inklusibo at positibong kapaligiran',
+    'role1-li-2': 'Suportahan at ayusin ang mga pangkalahatang volunteer sa bawat aktibidad',
+    'role1-li-3': 'Tulungang ayusin ang mga maliliit na isyu at iulat ang mga alalahanin sa kawani ng Lungsod',
+    'role1-li-4': 'Katawanin ang Lungsod at ang inyong kapitbahayan nang may propesyonalismo at pagmamalaki',
+    'role1-ideal': 'Angkop para sa mga lider ng komunidad, mga may karanasang volunteer, at mga komportable sa mga setting na nakaharap sa publiko.',
+    'role2-badge': 'Flexible · Sa Buong Lungsod',
+    'role2-title': 'Mga Pangkalahatang Volunteer',
+    'role2-sub': 'Suporta sa Araw ng Kaganapan · Isa o Maraming Shift',
+    'role2-li-1': 'Batiin ang mga dadalo at magbigay ng direksyon',
+    'role2-li-2': 'Tumulong sa pag-set up at pagtatapos ng kaganapan',
+    'role2-li-3': 'Tumulong sa programa o sa mga mesa',
+    'role2-li-4': 'Suportahan ang accessibility at inklusibong pakikipag-ugnayan',
+    'role2-ideal': 'Kapag posible, ang mga volunteer ay ilalagay sa kanilang sariling distrito — bagaman maaaring kailanganin ang ilang flexibility upang masiguro ang buong staffing sa lahat ng pilot site.',
+    'expect-eyebrow': 'Bago Ka Mag-apply',
+    'expect-title': 'Ano ang Inaasahan',
+    'expect-lead': 'Narito ang kailangan mong malaman tungkol sa oras na pangako, pagiging karapat-dapat, at pagsasanay bago mag-apply.',
+    'expect-card1-title': 'Pangako sa Oras',
+    'expect-card1-html': '<li><strong>Mga Pangkalahatang Volunteer:</strong> Mag-sign up para sa isa o maraming shift – ikaw ang magpapasya! Ang mga shift ay humigit-kumulang 4 na oras.</li><li style="margin-top:.4rem;"><strong>Mga District Lead:</strong> Ang bawat distrito ay magtataglay ng pitong kabuuang araw ng aktibidad (humigit-kumulang isa bawat limang araw). Hinihiling namin na ang aming mga Lead ay mangako sa lahat o halos lahat ng pitong araw para sa pagkakatulad.</li>',
+    'expect-card2-title': 'Pagiging Karapat-dapat',
+    'expect-card2-html': '<li>Dapat ay 18 taong gulang o mas matanda.</li><li>Dapat ay maaasahan at kayang tuparin ang mga nakumpirmang shift.</li>',
+    'expect-card3-title': 'Pagsasanay',
+    'expect-card3-html': '<li>Lahat ng mga napiling volunteer ay lalahok sa isang maikling kinakailangang virtual na pagsasanay sa Mayo.</li><li>Ang pagsasanay ay maghahanda sa iyo para sa iyong tungkulin at tutulong sa iyong maunawaan ang mga inaasahan.</li>',
+    'expect-card4-title': 'Mag-sign Up',
+    'expect-card4-html': '<li>Una, kumpletuhin ang isang pangkalahatang form ng pagpaparehistro at anumang kinakailangang waiver para mag-sign up bilang Kick It In the Park volunteer.</li><li>Kapag naaprubahan na ng mga organizer, makakapagrehistro ka para sa mga partikular na shift sa iyong piniling lokasyon ng distrito.</li>',
+    'timeline-eyebrow': 'Paano Gumagana',
+    'timeline-title': 'Timeline',
+    'timeline-lead': 'Narito ang hitsura ng proseso mula sa pag-sign up hanggang sa araw ng laro.',
+    'tl1-title': 'Abril – Unang Mayo: Mag-sign Up para Sumali',
+    'tl1-p': 'Sabihin sa amin ang inyong availability, kagustuhan sa pilot na lokasyon, background, at kumpletuhin ang mga kinakailangang waiver — susuriin namin at aaprobahan ang iyong aplikasyon para makapag-sign up ka para sa mga shift.',
+    'tl2-title': 'Kalagitnaan ng Mayo: Pagkumpirma ng Tungkulin at Pagtatalaga ng Shift',
+    'tl2-p': 'Mag-sign up para sa mga shift at tungkulin. Kumpirmahin sa amin sa lalong madaling panahon na available ka para sumali.',
+    'tl3-title': 'Huling Mayo: Kinakailangang Pagsasanay ng Volunteer',
+    'tl3-p': 'Mga kinakailangang sesyon ng pagsasanay ng volunteer, na available virtually. Maaaring hilingin namin sa mga District Lead na sumama para sa mga site walkthrough sa inyong kapitbahayan bago ang kaganapan.',
+    'tl4-title': 'Hunyo – Hulyo: Mga Kaganapan ng Kick It In the Park',
+    'tl4-p': 'Ito ang sandaling humakbang ka sa larangan at dalhin ang pagmamalaki ng komunidad sa buhay. Ang mga kaganapan ay nagtatakbo mula Hunyo 11 hanggang Hulyo 19, 2026.',
+    'why-eyebrow': 'Gumawa ng Pagbabago',
+    'why-title': 'Bakit Mag-volunteer?',
+    'why-lead': 'Higit pa sa isang watch party — ito ay isang pagkakataon na maging bahagi ng isang mas malaking bagay.',
+    'why-1': 'Ipagdiwang ang inyong kapitbahayan',
+    'why-2': 'Makipag-ugnayan sa mga kapwa Angeleno',
+    'why-3': 'Suportahan ang kabataan at mga pamilya',
+    'why-4': 'Ipakita ang inyong pagmamahal sa laro ng soccer',
+    'why-5': 'Maging bahagi ng isang makasaysayang pandaigdigang sandali',
+    'why-6': 'Tulungang hubugin ang hinaharap na network ng volunteer ng Lungsod',
+    'why-callout-html': 'Bilang isang pilot, ang programang ito ay nagsisilbing isang maagang hakbang sa pagbuo ng pangmatagalang imprastraktura ng volunteer ng Los Angeles bago ang <strong>2028 Olympics at Paralympic Games</strong>. Umaasa kaming muling buuin ang grupong ito sa mga darating na taon habang naghahanda kaming mag-host sa pandaigdigang antas!',
+    'perks-eyebrow': 'Mga Pasasalamat',
+    'perks-title': 'Mga Benepisyo ng Volunteer',
+    'perks-lead': 'Ang aming paraan ng pagsasabi ng salamat sa pagpapakita para sa inyong lungsod.',
+    'perk-1': 'Branded na damit ng Kick It In the Park volunteer',
+    'perk-2': 'Magaan na pagkain at inumin sa panahon ng inyong shift',
+    'perk-3': 'Isang komunidad ng mga kapwa Angeleno na may malasakit sa sibilidad',
+    'perk-4': 'Sertipikasyon ng serbisyo (para sa mga humihiling)',
+    'apply-eyebrow': 'Handa na Bang Sumali?',
+    'apply-title': 'Mag-apply para Maging Volunteer',
+    'apply-lead': 'Susuriin namin ang mga submission at aaprobahan ang mga tungkulin sa kalagitnaan ng Mayo para makapag-sign up ka para sa mga shift. Hindi kami makapaghintay na maging kasama ka sa koponan.',
+    'apply-btn': 'Mag-apply Ngayon →',
+    'apply-questions-html': 'Mga tanong? Mag-email sa <a href="mailto:maraya.kenyguyer@lacity.org" style="color:var(--brand);font-weight:600;">maraya.kenyguyer@lacity.org</a>',
+    'faq-eyebrow': 'Mga Madalas na Itanong',
+    'faq-title': 'Ang Kailangan Mong Malaman',
+    'footer-brand-name': '<span aria-hidden="true">⚽</span> Kick It In the Park — Volunteer',
+    'footer-desc': 'Isang programa ng volunteer ng Lungsod ng Los Angeles na sumusuporta sa mga pagdiriwang ng komunidad ng Copa Mundial ng FIFA 2026. Ginawa sa pakikipagtulungan ng L.A. City Council Districts, L.A. Recreation & Parks, at ang Opisina ng Alkalde.',
+    'footer-nav-title': 'Sa Pahinang Ito',
+    'footer-nav-about': 'Tungkol sa Programa',
+    'footer-nav-roles': 'Mga Tungkulin ng Volunteer',
+    'footer-nav-expect': 'Ano ang Inaasahan',
+    'footer-nav-timeline': 'Timeline',
+    'footer-nav-why': 'Bakit Mag-volunteer',
+    'footer-nav-faq': 'FAQ',
+    'footer-city-title': 'Mga Mapagkukunan ng Lungsod',
+    'footer-copyright': '© 2026 Lungsod ng Los Angeles · Lahat ng Karapatan ay Nakalaan',
+    'footer-translation-disclaimer': 'Ang pahinang ito ay isinalin gamit ang mga automated na kasangkapan sa pagsasalin upang matulungan ang aming komunidad na ma-access ang mahalagang impormasyon. Habang nagsisikap kami para sa katumpakan, humihingi kami ng paumanhin para sa anumang kapintasan at tinatanggap namin kayo na makipag-ugnayan kung kailangan ninyo ng paglilinaw.',
+    faqs: [
+      { q: 'Mabibigyan ba ako ng bayad?', a: 'Hindi. Ito ay isang pagkakataon bilang volunteer at hindi kasama ang kabayaran o mga tiket sa mga opisyal na laro.' },
+      { q: 'Ito ba ang opisyal na FIFA Volunteer Program?', a: 'Hindi. Ito ay isang volunteer program na pinapatakbo ng Lungsod ng Los Angeles na sumusuporta sa mga pagdiriwang ng komunidad sa mga lugar ng kapitbahayan — hindi sa mga opisyal na venue ng FIFA.' },
+      { q: 'Mayroon bang minimum na kinakailangan sa shift?', a: 'Ang mga Pangkalahatang Volunteer ay maaaring mag-sign up para sa isa o maraming shift. Hinihiling namin sa mga District Lead Coordinator na makadalo sa pinakamaraming kaganapan sa kanilang distrito — tumutulong na magdala ng pagkakatulad sa lahat ng aktibidad.' },
+      { q: 'Makakanoood ba ako ng mga laro sa panahon ng mga pagdiriwang?', a: 'Karamihan sa mga volunteer ay ilalagay malapit sa mga pagsasahimpapawid ng laro at mga aktibidad. Habang ang inyong pangunahing tungkulin ay ang suportahan ang mga dadalo, gagawin namin ang lahat para masiguro na ang mga volunteer ay magkaroon ng pagkakataon na mag-enjoy sa kapaligiran.' },
+      { q: 'Magbibigay ba ng transportasyon?', a: 'Hindi. Ang mga volunteer ay responsable para sa kanilang sariling transportasyon. Layunin naming ilagay ang mga volunteer sa kanilang sariling distrito kapag posible at hinihikayat ang transit, pagbibisikleta, o paglalakad.' },
+      { q: 'Paano kung mayroon akong mga pangangailangan sa accessibility?', a: 'Kami ay nakatuon sa inklusyon at accessibility. Maaari kang magbahagi ng mga pangangailangan sa akomodasyon sa iyong aplikasyon. Kung kailangan mo ng tulong sa pagkumpleto ng aplikasyon, makipag-ugnayan sa <a href="mailto:maraya.kenyguyer@lacity.org">maraya.kenyguyer@lacity.org</a>.' },
+      { q: 'Kailangan ko bang magsalita ng maraming wika?', a: 'Ang mga volunteer ay dapat komportable sa pakikipag-usap sa Ingles. Ang mga karagdagang kasanayan sa wika ay lubos na pinahahalagahan at tinatanggap.' },
+      { q: 'Bakit dapat akong mag-volunteer?', a: 'Ipagdiwang ang inyong komunidad, ipakita ang pagmamalaking sibiko, at maging bahagi ng isang pandaigdigang sandali sa LA. Ang programang ito ay nagsisildin din bilang isang maagang hakbang patungo sa mga susunod na kaganapan na pinamumunuan ng Lungsod, kabilang ang 2028 Olympic at Paralympic Games.' },
+      { q: 'Mahilig ako sa pag-volunteer sa aking komunidad — mayroon pa bang mga pagkakataon?', a: 'Oo, mahal namin ang tanong na iyan! I-explore ang mga karagdagang pagkakataon sa volunteer ng Lungsod <a href="https://volunteer.lacity.gov/" target="_blank" rel="noopener">dito</a>. Kung gusto mong makiisa nang lokal ngunit mayroon ka lamang ilang oras, hinihikayat ka naming sumali sa isang ShineLA event sa inyong kapitbahayan.' }
+    ]
+  },
+
+  fa: {
+    'nav-apply': 'ثبت‌نام کنید',
+    'hero-eyebrow': '⚽ لس‌آنجلس · ۲۰۲۶',
+    'hero-h1': 'داوطلب شوید در<br><em>Kick It</em><br>In the Park',
+    'hero-sub': 'این تابستان، شهر لس‌آنجلس مهمانی‌های تماشای رایگان و خانوادگی جام جهانی را به مراکز تفریحی و پارک‌های سراسر شهر می‌آورد. ما یک برنامه آزمایشی داوطلبانه در مکان‌های منتخب راه‌اندازی می‌کنیم — به ما کمک کنید مدلی برای رویدادهای جهانی آینده بسازیم.',
+    'hero-btn-primary': 'ثبت‌نام کنید',
+    'hero-btn-outline': 'درباره نقش‌های داوطلب بیشتر بدانید ↓',
+    'about-eyebrow': 'درباره برنامه',
+    'about-title': 'درباره داوطلبی در Kick It In the Park',
+    'about-p1': 'از ۱۱ ژوئن تا ۱۹ ژوئیه ۲۰۲۶، شهر مهمانی‌های روزانه تماشای جام جهانی را در مکان‌های مختلف Recreation & Parks در سراسر شهر برگزار خواهد کرد.',
+    'about-activations-label': 'فعالیت‌ها شامل:',
+    'about-li-1': 'پخش زنده مسابقات',
+    'about-li-2': 'کلینیک‌های فوتبال جوانان و فعالیت‌های مهارتی',
+    'about-li-3': 'مناطق سرگرمی خانوادگی',
+    'about-li-4': 'میزهای منابع شهری و برنامه‌ریزی',
+    'about-learn-more': 'اینجا بیشتر درباره Kick It In the Park بدانید →',
+    'about-locations-eyebrow': 'مکان‌های آزمایشی و تاریخ‌ها',
+    'about-locations-intro': 'برنامه آزمایشی داوطلبانه در مکان‌های منتخب Kick It In the Park در سراسر شهر برگزار خواهد شد، از جمله:',
+    'about-signup-html': 'اگر در نزدیکی زندگی می‌کنید، <a href="https://lagames.volunteermatters.org/volunteer/register" target="_blank" rel="noopener" style="color:var(--brand);text-decoration:none;font-weight:700;">ثبت‌نام کنید و به ما بپیوندید!</a>',
+    'roles-eyebrow': 'مشارکت کنید',
+    'roles-title': 'نقش‌های داوطلب',
+    'roles-lead': 'ما دو نوع داوطلب جذب می‌کنیم. هر دو نقش برای موفقیت هر جشن ضروری هستند.',
+    'role1-badge': 'تعهد بالا · محله‌محور',
+    'role1-title': 'هماهنگ‌کنندگان داوطلب پیشرو منطقه',
+    'role1-sub': 'رهبری مبتنی بر محله',
+    'role1-li-1': 'استقبال و راهنمایی شرکت‌کنندگان؛ کمک به ایجاد محیطی فراگیر و مثبت',
+    'role1-li-2': 'حمایت و سازماندهی داوطلبان عمومی در هر فعال‌سازی',
+    'role1-li-3': 'کمک به رفع مشکلات جزئی و ارجاع نگرانی‌ها به کارکنان شهری',
+    'role1-li-4': 'نمایندگی شهر و محله خود با حرفه‌ای‌گری و افتخار',
+    'role1-ideal': 'مناسب برای رهبران جامعه، داوطلبان باتجربه، و افرادی که در محیط‌های عمومی راحت هستند.',
+    'role2-badge': 'منعطف · سراسر شهر',
+    'role2-title': 'داوطلبان عمومی',
+    'role2-sub': 'پشتیبانی در روز رویداد · یک یا چند شیفت',
+    'role2-li-1': 'خوشامدگویی به شرکت‌کنندگان و ارائه راهنمایی',
+    'role2-li-2': 'کمک در راه‌اندازی و جمع‌آوری رویداد',
+    'role2-li-3': 'کمک در برنامه‌ریزی یا میزبانی',
+    'role2-li-4': 'حمایت از دسترس‌پذیری و مشارکت فراگیر',
+    'role2-ideal': 'تا جایی که ممکن است، داوطلبان در منطقه محل سکونت خود مستقر می‌شوند — اگرچه ممکن است برای تأمین کامل کارکنان در تمام سایت‌های آزمایشی انعطاف‌پذیری نیاز باشد.',
+    'expect-eyebrow': 'قبل از ثبت‌نام',
+    'expect-title': 'چه انتظاری داشته باشید',
+    'expect-lead': 'این اطلاعاتی است که باید قبل از ثبت‌نام درباره تعهد زمانی، واجد شرایط بودن، و آموزش بدانید.',
+    'expect-card1-title': 'تعهد زمانی',
+    'expect-card1-html': '<li><strong>داوطلبان عمومی:</strong> برای یک یا چند شیفت ثبت‌نام کنید – انتخاب با شماست! شیفت‌ها حدود ۴ ساعت هستند.</li><li style="margin-top:.4rem;"><strong>پیشروهای منطقه:</strong> هر منطقه هفت روز فعال‌سازی خواهد داشت (تقریباً هر پنج روز یکبار). از پیشروها می‌خواهیم که برای ثبات، به همه یا تقریباً همه هفت روز متعهد شوند.</li>',
+    'expect-card2-title': 'واجد شرایط بودن',
+    'expect-card2-html': '<li>باید ۱۸ سال یا بیشتر داشته باشید.</li><li>باید قابل اطمینان بوده و بتوانید شیفت‌های تأیید شده را انجام دهید.</li>',
+    'expect-card3-title': 'آموزش',
+    'expect-card3-html': '<li>همه داوطلبان منتخب در یک آموزش مجازی کوتاه و اجباری در ماه مه شرکت خواهند کرد.</li><li>آموزش شما را برای نقشتان آماده می‌کند و به شما کمک می‌کند انتظارات را درک کنید.</li>',
+    'expect-card4-title': 'ثبت‌نام',
+    'expect-card4-html': '<li>ابتدا، یک فرم ثبت‌نام عمومی و هر گونه معافیت مورد نیاز را برای ثبت‌نام به عنوان داوطلب Kick It In the Park تکمیل کنید.</li><li>پس از تأیید توسط برگزارکنندگان، می‌توانید برای شیفت‌های خاص در مکان منطقه انتخابی خود ثبت‌نام کنید.</li>',
+    'timeline-eyebrow': 'چگونه کار می‌کند',
+    'timeline-title': 'جدول زمانی',
+    'timeline-lead': 'این روند از ثبت‌نام تا روز بازی است.',
+    'tl1-title': 'آوریل – اوایل مه: ثبت‌نام برای پیوستن',
+    'tl1-p': 'در مورد دسترس‌پذیری، ترجیح مکان آزمایشی، سابقه خود به ما بگویید و معافیت‌های لازم را تکمیل کنید — سپس درخواست شما را بررسی و تأیید می‌کنیم تا بتوانید برای شیفت‌ها ثبت‌نام کنید.',
+    'tl2-title': 'اواسط مه: تأیید نقش‌ها و تخصیص شیفت‌ها',
+    'tl2-p': 'برای شیفت‌ها و نقش ثبت‌نام کنید. در اسرع وقت تأیید کنید که می‌توانید شرکت کنید.',
+    'tl3-title': 'اواخر مه: آموزش اجباری داوطلبان',
+    'tl3-p': 'جلسات آموزشی اجباری داوطلبان، به صورت مجازی. ممکن است از پیشروهای منطقه بخواهیم قبل از رویداد برای بازدید از سایت در محله‌شان به ما بپیوندند.',
+    'tl4-title': 'ژوئن – ژوئیه: رویدادهای Kick It In the Park',
+    'tl4-p': 'این زمانی است که به میدان قدم می‌گذارید و افتخار جامعه را زنده می‌کنید. رویدادها از ۱۱ ژوئن تا ۱۹ ژوئیه ۲۰۲۶ برگزار می‌شوند.',
+    'why-eyebrow': 'تفاوت ایجاد کنید',
+    'why-title': 'چرا داوطلب شویم؟',
+    'why-lead': 'بیش از یک مهمانی تماشا — این فرصتی است که بخشی از چیز بزرگ‌تری باشید.',
+    'why-1': 'محله خود را جشن بگیرید',
+    'why-2': 'با همشهریان لس‌آنجلسی ارتباط برقرار کنید',
+    'why-3': 'از جوانان و خانواده‌ها حمایت کنید',
+    'why-4': 'عشق خود به بازی فوتبال را نشان دهید',
+    'why-5': 'بخشی از یک لحظه تاریخی جهانی باشید',
+    'why-6': 'در شکل‌دهی شبکه داوطلبی آینده شهر کمک کنید',
+    'why-callout-html': 'به عنوان یک پایلوت، این برنامه همچنین گامی اولیه در ساخت زیرساخت داوطلبانه بلندمدت لس‌آنجلس پیش از <strong>بازی‌های المپیک و پاراالمپیک ۲۰۲۸</strong> است. امیدواریم این گروه را در سال‌های آینده مجدداً فعال کنیم چون آماده می‌شویم در مقیاس جهانی میزبانی کنیم!',
+    'perks-eyebrow': 'هدایای تشکر',
+    'perks-title': 'مزایای داوطلب',
+    'perks-lead': 'روش ما برای تشکر از حضور شما برای شهرتان.',
+    'perk-1': 'لباس داوطلب برندشده Kick It In the Park',
+    'perk-2': 'غذا و نوشیدنی سبک در طول شیفت',
+    'perk-3': 'جامعه‌ای از همشهریان متعهد به امور مدنی',
+    'perk-4': 'گواهینامه خدمت (برای کسانی که درخواست می‌کنند)',
+    'apply-eyebrow': 'آماده پیوستن هستید؟',
+    'apply-title': 'برای داوطلب شدن ثبت‌نام کنید',
+    'apply-lead': 'درخواست‌ها را بررسی کرده و نقش‌ها را تا اواسط مه تأیید می‌کنیم تا بتوانید برای شیفت‌ها ثبت‌نام کنید. مشتاقانه منتظر حضور شما در تیم هستیم.',
+    'apply-btn': 'ثبت‌نام کنید ←',
+    'apply-questions-html': 'سؤال دارید؟ با <a href="mailto:maraya.kenyguyer@lacity.org" style="color:var(--brand);font-weight:600;">maraya.kenyguyer@lacity.org</a> تماس بگیرید',
+    'faq-eyebrow': 'سؤالات متداول',
+    'faq-title': 'آنچه باید بدانید',
+    'footer-brand-name': '<span aria-hidden="true">⚽</span> Kick It In the Park — داوطلب',
+    'footer-desc': 'برنامه داوطلبانه شهر لس‌آنجلس که از جشن‌های جامعه جام جهانی فیفا ۲۰۲۶ حمایت می‌کند. در همکاری با مناطق شورای شهر لس‌آنجلس، تفریح و پارک‌های لس‌آنجلس، و دفتر شهردار تهیه شده است.',
+    'footer-nav-title': 'در این صفحه',
+    'footer-nav-about': 'درباره برنامه',
+    'footer-nav-roles': 'نقش‌های داوطلب',
+    'footer-nav-expect': 'چه انتظاری داشته باشید',
+    'footer-nav-timeline': 'جدول زمانی',
+    'footer-nav-why': 'چرا داوطلب شویم',
+    'footer-nav-faq': 'سؤالات متداول',
+    'footer-city-title': 'منابع شهری',
+    'footer-copyright': '© ۲۰۲۶ شهر لس‌آنجلس · تمام حقوق محفوظ است',
+    'footer-translation-disclaimer': 'این صفحه با استفاده از ابزارهای ترجمه خودکار ترجمه شده است تا به جامعه ما در دسترسی به اطلاعات مهم کمک کند. در حالی که برای دقت تلاش می‌کنیم، برای هر گونه نقص عذرخواهی می‌کنیم و از شما دعوت می‌کنیم اگر نیاز به توضیح دارید با ما تماس بگیرید.',
+    faqs: [
+      { q: 'آیا به من پول پرداخت می‌شود؟', a: 'خیر. این یک فرصت داوطلبانه است و شامل غرامت یا بلیط مسابقات رسمی نمی‌شود.' },
+      { q: 'آیا این برنامه رسمی داوطلبان فیفا است؟', a: 'خیر. این یک برنامه داوطلبانه اداره شده توسط شهر لس‌آنجلس است که از جشن‌های جامعه در سایت‌های محله‌ای حمایت می‌کند — نه در مکان‌های رسمی فیفا.' },
+      { q: 'آیا حداقل الزام شیفت وجود دارد؟', a: 'داوطلبان عمومی می‌توانند برای یک یا چند شیفت ثبت‌نام کنند. از هماهنگ‌کنندگان پیشرو منطقه می‌خواهیم تا حد امکان در هفت رویداد منطقه خود حضور داشته باشند — که به ثبات در تمام فعال‌سازی‌ها کمک می‌کند.' },
+      { q: 'آیا می‌توانم بازی‌ها را در طول جشن‌ها تماشا کنم؟', a: 'اکثر داوطلبان در نزدیکی پخش مسابقات و فعالیت‌ها مستقر خواهند شد. در حالی که نقش اصلی شما حمایت از شرکت‌کنندگان است، تمام تلاش خود را خواهیم کرد تا داوطلبان فرصت لذت بردن از فضا را داشته باشند.' },
+      { q: 'آیا حمل‌ونقل فراهم می‌شود؟', a: 'خیر. داوطلبان مسئول حمل‌ونقل خود هستند. هدف ما قرار دادن داوطلبان در منطقه محل سکونتشان تا حد امکان است و استفاده از حمل‌ونقل عمومی، دوچرخه‌سواری یا پیاده‌روی را تشویق می‌کنیم.' },
+      { q: 'اگر نیازهای دسترسی دارم چه باید بکنم؟', a: 'ما متعهد به گنجاندن و دسترسی هستیم. می‌توانید نیازهای سازگاری را در درخواست خود مطرح کنید. اگر برای تکمیل درخواست نیاز به کمک دارید، لطفاً با <a href="mailto:maraya.kenyguyer@lacity.org">maraya.kenyguyer@lacity.org</a> تماس بگیرید.' },
+      { q: 'آیا باید به چند زبان صحبت کنم؟', a: 'داوطلبان باید در ارتباط به زبان انگلیسی راحت باشند. مهارت‌های زبانی اضافی بسیار مورد استقبال قرار می‌گیرند.' },
+      { q: 'چرا باید داوطلب شوم؟', a: 'جامعه خود را جشن بگیرید، افتخار مدنی نشان دهید، و بخشی از یک لحظه جهانی در لس‌آنجلس باشید. این برنامه همچنین به عنوان گامی اولیه به سوی رویدادهای آینده شهری، از جمله بازی‌های المپیک و پاراالمپیک ۲۰۲۸ عمل می‌کند.' },
+      { q: 'من داوطلب شدن در جامعه‌ام را دوست دارم — آیا فرصت‌های بیشتری وجود دارد؟', a: 'بله، این سؤال را دوست داریم! فرصت‌های داوطلبانه اضافی شهر را <a href="https://volunteer.lacity.gov/" target="_blank" rel="noopener">اینجا</a> کاوش کنید. اگر می‌خواهید در سطح محلی مشارکت کنید اما فقط چند ساعت وقت دارید، شما را تشویق می‌کنیم در یک رویداد ShineLA در محله‌تان شرکت کنید.' }
+    ]
   }
-  document.cookie = "googtrans=/en/" + lang + ";path=/;";
-  document.cookie = "googtrans=/en/" + lang + ";path=/;domain=." + window.location.hostname;
-  window.location.reload();
-}
+};
 
-function toggleLangDropdown() {
-  const dd = document.getElementById("lang-dropdown-menu");
-  const btn = dd.previousElementSibling;
-  const isOpen = dd.classList.toggle("open");
-  btn.setAttribute("aria-expanded", isOpen);
-  if (isOpen) {
-    const close = function(e) {
-      if (!dd.contains(e.target) && e.target !== btn) {
-        dd.classList.remove("open");
-        btn.setAttribute("aria-expanded", "false");
-        document.removeEventListener("click", close);
-      }
-    };
-    setTimeout(() => document.addEventListener("click", close), 0);
-  }
-}
+let LANG = 'en';
 
-(function highlightActiveLang() {
-  const match = document.cookie.match(/googtrans=\/en\/([^;]+)/);
-  const currentLang = match ? match[1] : "en";
-  document.querySelectorAll(".lang-btn").forEach(btn => {
-    btn.classList.remove("active");
-    const attr = btn.getAttribute("onclick") || "";
-    if (attr.includes("'" + currentLang + "'")) btn.classList.add("active");
+function switchLang(code) {
+  if (!T[code]) return;
+  LANG = code;
+  const t = T[code];
+
+  document.querySelectorAll('.lang-btn').forEach(function(b) {
+    var isActive = b.dataset.lang === code;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
   });
-})();
 
-/* ── FAQ ── */
-const FAQS = [
-  { q: "Will I be paid?",
-    a: "No. This is a volunteer opportunity and does not include compensation or tickets to official matches." },
-  { q: "Is this the official FIFA Volunteer Program?",
-    a: "No. This is a City of Los Angeles-run volunteer program supporting community celebrations at neighborhood sites — not official FIFA venues." },
-  { q: "Is there a minimum shift requirement?",
-    a: "General Volunteers may sign up for one or multiple shifts. We ask that District Lead Coordinators commit to as many of the seven events in their district as they can make — helping bring consistency across the activations." },
-  { q: "Will I get to watch the games during the celebrations?",
-    a: "Most volunteers will be stationed near match screenings and activities. While your primary role is to support attendees, we will do our best to ensure volunteers have opportunities to enjoy the atmosphere." },
-  { q: "Will transportation be provided?",
-    a: "No. Volunteers are responsible for their own transportation. We aim to place volunteers in their home district whenever possible and encourage transit, biking, or walking." },
-  { q: "What if I have accessibility needs?",
-    a: "We are committed to inclusion and accessibility. You may share accommodation needs in your application. If you require assistance completing the application, please contact <a href='mailto:maraya.kenyguyer@lacity.org'>maraya.kenyguyer@lacity.org</a>." },
-  { q: "Do I need to speak multiple languages?",
-    a: "Volunteers should be comfortable communicating in English. Additional language skills are deeply appreciated and welcomed." },
-  { q: "Why should I volunteer?",
-    a: "Celebrate your community, show civic pride, and be part of a global moment in LA. This program also serves as an early step toward future City-led events, including the 2028 Olympic and Paralympic Games." },
-  { q: "I love volunteering in my community — are there more opportunities out there?",
-    a: "Yes, we love that question! Explore additional City volunteer opportunities <a href='https://volunteer.lacity.gov/' target='_blank' rel='noopener'>here</a>. If you want to get involved locally but only have a few hours, we encourage you to join a ShineLA event in your neighborhood." },
-];
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var v = t[el.dataset.i18n];
+    if (v != null) el.textContent = v;
+  });
+
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var v = t[el.dataset.i18nHtml];
+    if (v != null) el.innerHTML = v;
+  });
+
+  document.documentElement.lang = code;
+  document.documentElement.dir = (code === 'fa') ? 'rtl' : 'ltr';
+  buildFAQ();
+}
 
 function buildFAQ() {
-  const list = document.getElementById("faq-list");
-  FAQS.forEach((item, i) => {
-    const answerId = "faq-a-" + i;
-    const div = document.createElement("div");
-    div.className = "faq-item";
-    div.innerHTML = `
-      <button class="faq-q" onclick="toggleFAQ(${i},this)" aria-expanded="false" aria-controls="${answerId}">
-        <span>${item.q}</span>
-        <span class="faq-chevron" aria-hidden="true">▾</span>
-      </button>
-      <div class="faq-a" id="${answerId}" role="region" aria-labelledby="faq-q-${i}">
-        <p>${item.a}</p>
-      </div>`;
+  var list = document.getElementById('faq-list');
+  list.innerHTML = '';
+  var faqs = T[LANG].faqs;
+  faqs.forEach(function(item, i) {
+    var answerId = 'faq-a-' + i;
+    var btnId = 'faq-q-' + i;
+    var div = document.createElement('div');
+    div.className = 'faq-item';
+    div.innerHTML =
+      '<button type="button" id="' + btnId + '" class="faq-q" onclick="toggleFAQ(' + i + ',this)" aria-expanded="false" aria-controls="' + answerId + '">' +
+        '<span>' + item.q + '</span>' +
+        '<span class="faq-chevron" aria-hidden="true">▾</span>' +
+      '</button>' +
+      '<div class="faq-a" id="' + answerId + '" role="region" aria-labelledby="' + btnId + '">' +
+        '<p>' + item.a + '</p>' +
+      '</div>';
     list.appendChild(div);
   });
 }
 
 function toggleFAQ(i, btn) {
-  const a = document.getElementById("faq-a-" + i);
-  const isOpen = a.classList.contains("open");
-  document.querySelectorAll(".faq-a").forEach(el => el.classList.remove("open"));
-  document.querySelectorAll(".faq-q").forEach(el => { el.classList.remove("open"); el.setAttribute("aria-expanded", "false"); });
+  var a = document.getElementById('faq-a-' + i);
+  var isOpen = a.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(function(el) { el.classList.remove('open'); });
+  document.querySelectorAll('.faq-q').forEach(function(el) { el.classList.remove('open'); el.setAttribute('aria-expanded', 'false'); });
   if (!isOpen) {
-    a.classList.add("open");
-    btn.classList.add("open");
-    btn.setAttribute("aria-expanded", "true");
+    a.classList.add('open');
+    btn.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
   }
 }
 
-document.addEventListener("DOMContentLoaded", buildFAQ);
+document.addEventListener('DOMContentLoaded', buildFAQ);
+
+// ── VOLUNTEER PILOT MAP ──
+document.addEventListener('DOMContentLoaded', function() {
+  const mapEl = document.getElementById('volunteer-map');
+  if (!mapEl || typeof L === 'undefined') return;
+
+  const PILOT_SITES = [
+    { name: 'Echo Park Lake',                       neighborhood: 'Echo Park',        lat: 34.0698, lng: -118.2601, dates: 'June 11, 16, 21, 26 · July 1, 6, 14' },
+    { name: 'Jackie Tatum Harvard Recreation Center', neighborhood: 'South Los Angeles', lat: 33.9835, lng: -118.3038, dates: 'June 12, 17, 22, 27 · July 2, 7, 15' },
+    { name: 'Whitsett Fields',                       neighborhood: 'North Hollywood',  lat: 34.1961, lng: -118.4039, dates: 'June 13, 18, 23, 28 · July 3, 8, 18' },
+    { name: 'Cheviot Hills Recreation Center',       neighborhood: 'Cheviot Hills',    lat: 34.0469, lng: -118.4090, dates: 'June 14, 19, 24' },
+    { name: 'Westwood Recreation Center',            neighborhood: 'Westwood',         lat: 34.0533, lng: -118.4478, dates: 'June 29 · July 4, 10, 19' },
+  ];
+
+  const map = L.map(mapEl, { center: [34.07, -118.36], zoom: 11, zoomControl: true, scrollWheelZoom: false });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19
+  }).addTo(map);
+
+  PILOT_SITES.forEach(site => {
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="width:18px;height:18px;background:#304FFE;border:3px solid #fff;border-radius:50%;box-shadow:0 0 8px rgba(48,79,254,.7),0 2px 6px rgba(0,0,0,.35);cursor:pointer;"></div>`,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9]
+    });
+    L.marker([site.lat, site.lng], { icon })
+      .addTo(map)
+      .bindPopup(
+        `<div style="font-family:system-ui;font-size:13px;min-width:190px;">
+          <strong style="color:#0a1a8a;">${site.name}</strong><br>
+          <span style="color:#555;font-size:11px;">${site.neighborhood}</span><br>
+          <span style="display:inline-block;margin-top:5px;background:#e8edf8;color:#304FFE;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;">Volunteer Pilot Site</span><br>
+          <span style="font-size:11px;color:#666;margin-top:4px;display:block;">📅 ${site.dates}</span>
+        </div>`,
+        { closeButton: false, maxWidth: 260 }
+      );
+  });
+});
 </script>
-<div id="google_translate_element" style="display:none"></div>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
