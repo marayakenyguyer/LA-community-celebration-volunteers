@@ -9,7 +9,7 @@ const HAWD_DIFF = [
       { icon: "handshake", t: "Welcoming, wayfinding, accessibility support and civic energy. Not security or event staff." },
       { icon: "building", t: "Run by the City of Los Angeles. Complements — and is separate from — the official Games workforce." },
     ] },
-  { tag: "LA28", title: "Games Volunteers", accent: "var(--gold-700)",
+  { tag: "LA28", title: "Games Volunteers", accent: "#8A5700",
     points: [
       { icon: "ticket", t: "Inside official competition venues and Games operations." },
       { icon: "users", t: "Roles defined and managed by the LA28 organizing committee." },
@@ -39,7 +39,7 @@ function HowAreWeDifferent({ id = "diff", bg = "var(--surface-page)" } = {}) {
                     {c.points.map((pt, i) => (
                       <li key={i} style={{ display: "flex", gap: 12, alignItems: "flex-start", textAlign: "left" }}>
                         <span style={{ width: 32, height: 32, borderRadius: 9, flex: "none", background: c.accent, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                          <Icon name={pt.icon} size={17} color={c.accent === "var(--gold-500)" ? "var(--ink-900)" : "#fff"} stroke={2.2} />
+                          <Icon name={pt.icon} size={17} color="#fff" stroke={2.2} />
                         </span>
                         <span style={{ fontFamily: "var(--font-text)", fontSize: 14.5, lineHeight: 1.5, color: "var(--text-body)" }}>{pt.t}</span>
                       </li>
