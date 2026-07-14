@@ -1,6 +1,6 @@
 // City Volunteers LA 2028 — Photo-driven landing (Editorial layout)
 const PDS = window.CityVolunteersLA2028DesignSystem_ea1102;
-const PHOTO = "assets/photos/volunteers-sunset.jpg";
+const PHOTO = "img_7554-mrfbugxu.jpeg";
 
 /* ---- shared content ---- */
 const P_STATS = [
@@ -10,9 +10,9 @@ const P_STATS = [
 ];
 const P_WHY = [
   { icon: "heart", color: "var(--magenta-500)", h: "Be part of history", b: "Step into a once-in-a-generation moment for your city." },
-  { icon: "graduation-cap", color: "var(--coral-600)", h: "Build lasting skills", b: "Training that outlasts the closing ceremony." },
+  { icon: "graduation-cap", color: "#D9481F", h: "Build lasting skills", b: "Training that outlasts the closing ceremony." },
   { icon: "users", color: "var(--purple-500)", h: "Find your people", b: "Find community and join a network of amazing Angelenos." },
-  { icon: "accessibility", color: "var(--green-600)", h: "A Games for All", b: "Find meaningful roles for every ability and skill set." },
+  { icon: "accessibility", color: "#1F8A41", h: "A Games for All", b: "Find meaningful roles for every ability and skill set." },
 ];
 
 function pScroll(id) {
@@ -42,23 +42,20 @@ function PHeader() {
   );
 }
 
-/* ---- 1. Full-bleed hero video (no text overlay) ---- */
+/* ---- 1. Full-bleed hero video (autoplay, muted, loop, no controls) ---- */
 function FullBleedVideo() {
-  const [playing, setPlaying] = React.useState(false);
   return (
     <section style={{ position: "relative", width: "100%", height: "clamp(420px, 78vh, 860px)", background: "#000", overflow: "hidden" }}>
-      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${PHOTO})`, backgroundSize: "cover", backgroundPosition: "center 32%" }} />
-      <div style={{ position: "absolute", inset: 0, background: playing ? "rgba(11,18,48,0.08)" : "rgba(11,18,48,0.32)", transition: "background .3s ease" }} />
-      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <button onClick={() => setPlaying((p) => !p)} aria-label={playing ? "Pause" : "Play volunteer film"} style={{ width: 104, height: 104, borderRadius: "50%", border: "none", cursor: "pointer", background: "var(--grad-sunset)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 14px 40px rgba(0,0,0,0.4)" }}>
-          {playing
-            ? <svg width="38" height="38" viewBox="0 0 24 24" fill="#fff"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
-            : <svg width="44" height="44" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14Z"/></svg>}
-        </button>
-      </div>
-      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 5, background: "rgba(255,255,255,0.22)" }}>
-        <div style={{ height: "100%", width: playing ? "100%" : "0%", background: "var(--grad-sunset)", transition: playing ? "width 84s linear" : "width .3s ease" }} />
-      </div>
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${PHOTO})`, backgroundSize: "cover", backgroundPosition: "center 60%" }} />
+      <iframe
+        src="https://www.youtube-nocookie.com/embed/Bw3qj2MDimQ?autoplay=1&mute=1&loop=1&playlist=Bw3qj2MDimQ&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&fs=0&cc_load_policy=0"
+        title="City Volunteers 2028 hero video"
+        frameBorder="0"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        referrerPolicy="strict-origin-when-cross-origin"
+        style={{ position: "absolute", top: "50%", left: "50%", width: "100vw", height: "56.25vw", minHeight: "100%", minWidth: "177.78vh", transform: "translate(-50%,-50%) scale(1.3)", border: "none", pointerEvents: "none" }}
+      ></iframe>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
     </section>
   );
 }
@@ -106,18 +103,18 @@ function Display({ children, color = "var(--ink-900)", size = "clamp(2rem,4.5vw,
    ============================================================ */
 function Intro() {
   return (
-    <section style={{ background: "var(--surface-page)", padding: "clamp(52px,7vw,96px) clamp(20px,5vw,48px)" }}>
+    <section style={{ background: "var(--surface-page)", padding: "clamp(24px,3.5vw,52px) clamp(20px,5vw,48px)" }}>
       <div style={{ maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
         <Kicker color="var(--coral-500)" center></Kicker>
         <h1 style={{ fontFamily: "Anton, Arial Narrow, sans-serif", textTransform: "uppercase", fontSize: 100, lineHeight: 0.95, letterSpacing: "-0.01em", color: "var(--ink-900)", margin: "0 auto", textAlign: "center" }}>Be the face of Los Angeles</h1>
         <p style={{ fontFamily: "var(--font-text)", fontSize: 24, lineHeight: 1.65, color: "var(--text-body)", margin: "20px auto 0" }}>In 2028, LA welcomes the world for the Olympic and Paralympic Games. Thousands of City Volunteers will help - welcoming newcomers, neighbors, and visitors from across the region and the world.</p>
       </div>
       <div style={{ maxWidth: 1080, margin: "32px auto 0", borderRadius: "var(--radius-xl)", overflow: "hidden", boxShadow: "var(--shadow-lg)" }}>
-        <img src="img_7554-mrfbugxu.jpeg" alt="City Volunteers crew" style={{ width: "100%", display: "block", objectFit: "cover", maxHeight: 420 }} />
+        <img src="assets/photos/volunteers-sunset.jpg" alt="City Volunteers crew" style={{ width: "100%", display: "block", objectFit: "cover", objectPosition: "center 30%", maxHeight: 420, paddingBottom: 0, marginBottom: 0 }} />
       </div>
-      <div style={{ maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", textAlign: "center", marginTop: 8 }}>
         <Kicker color="var(--coral-500)" center></Kicker>
-        <Display center size="clamp(2.4rem,5.5vw,4.2rem)" style={{ fontSize: 48 }}>JOIN THE 2028 CREW</Display>
+        <Display center size="clamp(2.4rem,5.5vw,4.2rem)" style={{ fontSize: 48, marginTop: 15 }}>JOIN THE 2028 CREW</Display>
         <p style={{ fontFamily: "var(--font-text)", fontSize: "1.18rem", lineHeight: 1.65, color: "var(--text-body)", margin: "20px auto 0" }}>The City of Los Angeles is recruiting 5,000 City Volunteers for the 2028 Olympic and Paralympic Games - the warm, knowledgeable face opf the city in public spaces, transit corridors, and neighborhood celebration sites. We bring wayfinding, accessibility support, information, and public joy that makes every visitor feel at home and every Angeleno feel connected to the games.</p>
       </div>
     </section>
