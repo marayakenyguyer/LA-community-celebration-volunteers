@@ -1,0 +1,30 @@
+/* ============================================================
+   City Volunteers LA 2028 — RADII, BORDERS, SHADOWS, MOTION
+   ============================================================ */
+:root {
+  /* ---- Radii --------------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --radius-pill: 999px;   /* the program LOVES capsules / pills */
+
+  /* ---- Borders ------------------------------------------- */
+  --border-hair: 1px solid var(--line-200);
+  --border-ink: 2px solid var(--ink-900);     /* bold black outline, FIFA/LA28 style */
+
+  /* ---- Shadows (soft, warm, daylight) -------------------- */
+  --shadow-sm: 0 1px 2px rgba(11, 18, 48, 0.08);
+  --shadow-md: 0 6px 18px rgba(11, 18, 48, 0.10);
+  --shadow-lg: 0 18px 44px rgba(11, 18, 48, 0.14);
+  --shadow-pop: 0 10px 0 0 var(--ink-900);    /* hard "sticker" drop, signature for cards/buttons */
+  --shadow-pop-sm: 0 5px 0 0 var(--ink-900);
+
+  /* ---- Motion -------------------------------------------- */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1); /* @kind other */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* @kind other */
+  --dur-fast: 120ms; /* @kind other */
+  --dur-base: 200ms; /* @kind other */
+  --dur-slow: 360ms; /* @kind other */
+}

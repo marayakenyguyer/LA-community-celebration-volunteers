@@ -1,0 +1,203 @@
+// City Volunteers LA 2028 — Photo-driven landing (Editorial layout)
+const PDS = window.CityVolunteersLA2028DesignSystem_ea1102;
+const PHOTO = "assets/photos/volunteers-sunset.jpg";
+
+/* ---- shared content ---- */
+const P_STATS = [
+  { v: "5K–10K", l: "Volunteers", c: "var(--magenta-500)" },
+  { v: "25,000+", l: "Shifts", c: "var(--coral-500)" },
+  { v: "15", l: "Council districts", c: "var(--gold-600)" },
+];
+const P_WHY = [
+  { icon: "heart", color: "var(--magenta-500)", h: "Be part of history", b: "Step into a once-in-a-generation moment for your city." },
+  { icon: "graduation-cap", color: "var(--coral-600)", h: "Build lasting skills", b: "Training that outlasts the closing ceremony." },
+  { icon: "users", color: "var(--purple-500)", h: "Find your people", b: "Find community and join a network of amazing Angelenos." },
+  { icon: "accessibility", color: "var(--green-600)", h: "A Games for All", b: "Find meaningful roles for every ability and skill set." },
+];
+
+function pScroll(id) {
+  const el = document.getElementById(id);
+  if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 10, behavior: "smooth" });
+}
+
+/* ---- Slim header (no text over hero) ---- */
+function PHeader() {
+  return (
+    <header style={{ position: "relative", zIndex: 20, boxShadow: "0 1px 0 var(--line-200)", backgroundColor: "#FFAC00" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "12px clamp(20px,5vw,48px)", display: "flex", alignItems: "center" }}>
+        <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 12, padding: 0 }}>
+          <img src="assets/photos/la-city-seal.png" alt="City of Los Angeles seal" style={{ width: 40, height: 40, flex: "none", objectFit: "contain" }} />
+          <span style={{ textAlign: "left", lineHeight: 1 }}>
+            <span style={{ display: "block", fontFamily: "var(--font-display)", textTransform: "uppercase", fontSize: 20, letterSpacing: "-0.01em", color: "var(--ink-900)" }}>
+              <span style={{ color: "var(--blue-700)", fontSize: 24 }}>CITY OF LOS ANGELES</span>
+            </span>
+            <span style={{ display: "block", fontFamily: "anton", fontSize: 14, letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--ink-900)", marginTop: 4 }}>2028 GAMES VOLUNTEERS</span>
+          </span>
+        </button>
+        <div style={{ marginLeft: "auto" }}>
+          <img src="assets/photos/mayor-karen-bass-logo.png" alt="Mayor Karen Bass" style={{ height: 40, width: "auto", display: "block" }} />
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* ---- 1. Full-bleed hero video (no text overlay) ---- */
+function FullBleedVideo() {
+  const [playing, setPlaying] = React.useState(false);
+  return (
+    <section style={{ position: "relative", width: "100%", height: "clamp(420px, 78vh, 860px)", background: "#000", overflow: "hidden" }}>
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${PHOTO})`, backgroundSize: "cover", backgroundPosition: "center 32%" }} />
+      <div style={{ position: "absolute", inset: 0, background: playing ? "rgba(11,18,48,0.08)" : "rgba(11,18,48,0.32)", transition: "background .3s ease" }} />
+      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <button onClick={() => setPlaying((p) => !p)} aria-label={playing ? "Pause" : "Play volunteer film"} style={{ width: 104, height: 104, borderRadius: "50%", border: "none", cursor: "pointer", background: "var(--grad-sunset)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 14px 40px rgba(0,0,0,0.4)" }}>
+          {playing
+            ? <svg width="38" height="38" viewBox="0 0 24 24" fill="#fff"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            : <svg width="44" height="44" viewBox="0 0 24 24" fill="#fff"><path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14Z"/></svg>}
+        </button>
+      </div>
+      <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 5, background: "rgba(255,255,255,0.22)" }}>
+        <div style={{ height: "100%", width: playing ? "100%" : "0%", background: "var(--grad-sunset)", transition: playing ? "width 84s linear" : "width .3s ease" }} />
+      </div>
+    </section>
+  );
+}
+
+/* ---- 6. Google Form link ---- */
+function SignupMini({ bg, onDark, kicker }) {
+  return (
+    <section id="signup" style={{ padding: "clamp(56px,8vw,104px) clamp(20px,5vw,48px)", backgroundColor: "#1C1AE7" }}>
+      <div style={{ margin: "0 auto", textAlign: "center", maxWidth: 720 }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: 12.5, letterSpacing: "0.16em", textTransform: "uppercase", color: kicker, marginBottom: 14 }}></div>
+        <h2 style={{ fontFamily: "var(--font-display)", textTransform: "uppercase", fontSize: "clamp(2.2rem,5vw,3.4rem)", lineHeight: 0.92, color: "#FFFFFF", margin: "0 0 14px" }}>SIGN UP FOR UPDATES</h2>
+        <p style={{ fontFamily: "var(--font-text)", fontSize: "1.08rem", lineHeight: 1.6, color: "#FFFFFF", margin: "0 auto 28px" }}>Be among the first to hear when applications open in early 2027. Join our interest list today to receive program updates, volunteer opportunities, and ways to get involved before the games.</p>
+        <a href="https://forms.gle/JZcxauPu1vnmJ35K6" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+          <PDS.Button variant="gold" size="lg" pop iconRight={<Icon name="arrow-right" size={20} color="var(--ink-900)" />}>Sign me up</PDS.Button>
+        </a>
+      </div>
+    </section>
+  );
+}
+
+/* ---- Compact banner: applications open early 2027 ---- */
+function OpenBanner() {
+  return (
+    <div style={{ background: "var(--blue-600)", padding: "16px clamp(20px,5vw,48px)", display: "flex", alignItems: "center", justifyContent: "center", gap: 18, flexWrap: "wrap" }}>
+      <span style={{ fontFamily: "var(--font-display)", textTransform: "uppercase", letterSpacing: "-0.01em", fontSize: "clamp(1rem,2.2vw,1.3rem)", color: "#fff", textAlign: "center" }}>
+        Applications open early 2027 — be the first to know!
+      </span>
+      <a href="https://forms.gle/JZcxauPu1vnmJ35K6" target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+        <PDS.Button variant="gold" pop size="sm">Sign up for updates</PDS.Button>
+      </a>
+    </div>
+  );
+}
+
+/* ---- shared kicker + heading ---- */
+function Kicker({ children, color, center }) {
+  return <div style={{ fontFamily: "var(--font-mono)", fontSize: 12, letterSpacing: "0.16em", textTransform: "uppercase", color, marginBottom: 14, textAlign: center ? "center" : "left" }}>{children}</div>;
+}
+function Display({ children, color = "var(--ink-900)", size = "clamp(2rem,4.5vw,3.4rem)", center, max = "20ch", style = {} }) {
+  return <h2 style={{ fontFamily: "var(--font-display)", textTransform: "uppercase", fontSize: size, lineHeight: 0.95, letterSpacing: "-0.01em", color, margin: 0, maxWidth: max, marginLeft: center ? "auto" : 0, marginRight: center ? "auto" : 0, textAlign: center ? "center" : "left", ...style }}>{children}</h2>;
+}
+
+/* ============================================================
+   2. INTRO + BLURB
+   ============================================================ */
+function Intro() {
+  return (
+    <section style={{ background: "var(--surface-page)", padding: "clamp(52px,7vw,96px) clamp(20px,5vw,48px)" }}>
+      <div style={{ maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
+        <Kicker color="var(--coral-500)" center></Kicker>
+        <h1 style={{ fontFamily: "Anton, Arial Narrow, sans-serif", textTransform: "uppercase", fontSize: 100, lineHeight: 0.95, letterSpacing: "-0.01em", color: "var(--ink-900)", margin: "0 auto", textAlign: "center" }}>Be the face of Los Angeles</h1>
+        <p style={{ fontFamily: "var(--font-text)", fontSize: 24, lineHeight: 1.65, color: "var(--text-body)", margin: "20px auto 0" }}>In 2028, LA welcomes the world for the Olympic and Paralympic Games. Thousands of City Volunteers will help - welcoming newcomers, neighbors, and visitors from across the region and the world.</p>
+      </div>
+      <div style={{ maxWidth: 1080, margin: "32px auto 0", borderRadius: "var(--radius-xl)", overflow: "hidden", boxShadow: "var(--shadow-lg)" }}>
+        <img src="img_7554-mrfbugxu.jpeg" alt="City Volunteers crew" style={{ width: "100%", display: "block", objectFit: "cover", maxHeight: 420 }} />
+      </div>
+      <div style={{ maxWidth: 1080, margin: "0 auto", textAlign: "center" }}>
+        <Kicker color="var(--coral-500)" center></Kicker>
+        <Display center size="clamp(2.4rem,5.5vw,4.2rem)" style={{ fontSize: 48 }}>JOIN THE 2028 CREW</Display>
+        <p style={{ fontFamily: "var(--font-text)", fontSize: "1.18rem", lineHeight: 1.65, color: "var(--text-body)", margin: "20px auto 0" }}>The City of Los Angeles is recruiting 5,000 City Volunteers for the 2028 Olympic and Paralympic Games - the warm, knowledgeable face opf the city in public spaces, transit corridors, and neighborhood celebration sites. We bring wayfinding, accessibility support, information, and public joy that makes every visitor feel at home and every Angeleno feel connected to the games.</p>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================
+   5. WHY VOLUNTEER
+   ============================================================ */
+function Why() {
+  return (
+    <section style={{ background: "#E4F0FF", padding: "clamp(56px,8vw,100px) clamp(20px,5vw,48px)", textAlign: "center" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto" }}>
+        <Kicker color="var(--magenta-500)" center></Kicker>
+        <Display center max="16ch" color="#000000">WHY VOLUNTEER?</Display>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 18, marginTop: 44 }}>
+          {P_WHY.map((w) => (
+            <div key={w.h} style={{ background: "var(--surface-card)", borderRadius: "var(--radius-lg)", padding: "24px 22px", boxShadow: "var(--shadow-sm)", display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
+              <span style={{ width: 50, height: 50, borderRadius: 14, background: w.color, display: "flex", alignItems: "center", justifyContent: "center" }}><Icon name={w.icon} size={25} color="#fff" stroke={2.2} /></span>
+              <h3 style={{ fontFamily: "var(--font-sans)", fontWeight: 800, fontSize: 18, letterSpacing: "-0.01em", color: "var(--ink-900)", margin: "15px 0 7px" }}>{w.h}</h3>
+              <p style={{ fontFamily: "var(--font-text)", fontSize: 14.5, lineHeight: 1.55, color: "var(--text-body)", margin: 0 }}>{w.b}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---- Full-width photo quote band ---- */
+function QuoteBand() {
+  return (
+    <section style={{ position: "relative", width: "100%", minHeight: "clamp(480px, 82vh, 820px)", backgroundImage: "url(assets/photos/mayor-podium-coliseum.webp)", backgroundSize: "cover", backgroundPosition: "center 30%", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(11,18,48,0) 65%, rgba(11,18,48,0.7) 100%)" }} />
+      <div style={{ position: "relative", maxWidth: 920, width: "100%", margin: "0 auto", padding: "clamp(16px,2vw,22px) clamp(24px,4vw,44px)", marginBottom: "clamp(20px,3vw,32px)", background: "rgba(255,255,255,0.96)", borderRadius: "var(--radius-xl)", boxShadow: "var(--shadow-lg)", textAlign: "center" }}>
+        <p style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: "clamp(1rem,1.8vw,1.2rem)", lineHeight: 1.5, color: "var(--ink-900)", margin: "0 0 10px" }}>
+          The 2028 Games are an opportunity to reimagine our infrastructure, strengthen community resilience, and expand opportunity for all Angelenos — a true 'Games for All'. This is my vision for the 2028 Games <span style={{ fontSize: 19.2 }}>—</span> an LA made better for all Angelenos.
+        </p>
+        <div style={{ fontFamily: "var(--font-sans)", fontWeight: 800, fontSize: 14, color: "var(--blue-700)" }}>Mayor Karen Bass</div>
+      </div>
+    </section>
+  );
+}
+
+/* ---- Shine LA promo ---- */
+function ShinePromo() {
+  return (
+    <section style={{ background: "var(--surface-page)", padding: "clamp(56px,8vw,100px) clamp(20px,5vw,48px)" }}>
+      <div style={{ maxWidth: 1180, margin: "0 auto", display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "clamp(28px,4vw,52px)", alignItems: "center" }}>
+        <div>
+          <Kicker color="var(--gold-600)"></Kicker>
+          <Display max="18ch">Join a Shine LA day</Display>
+          <p style={{ fontFamily: "var(--font-text)", fontSize: "1.05rem", lineHeight: 1.65, color: "var(--text-body)", margin: "18px 0 0" }}>
+            Want to start making an impact today? Join Shine LA, our monthly volunteer initative that helps beautify neighborhoods while building the spirit that will welcome the world in 2028.
+          </p>
+        </div>
+        <div style={{ borderRadius: "var(--radius-xl)", overflow: "hidden", boxShadow: "var(--shadow-lg)" }}>
+          <img src="assets/photos/shine-la-logo.png" alt="Shine LA" style={{ width: "100%", display: "block", objectFit: "cover" }} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function LandingPhoto() {
+  return (
+    <div style={{ minHeight: "100vh", background: "var(--surface-page)" }}>
+      <PHeader />
+      <FullBleedVideo />
+      <Intro />
+      <OpenBanner />
+      <QuoteBand />
+      <Why />
+      <FourStepsToJoin bg="#FFF9F1" />
+      <OpenBanner />
+      <HowAreWeDifferent bg="#E4F0FF" />
+      <SignupMini bg="var(--grad-sunset)" kicker="rgba(11,18,48,0.6)" />
+      <ShinePromo />
+    </div>
+  );
+}
+
+window.LandingPhoto = LandingPhoto;
