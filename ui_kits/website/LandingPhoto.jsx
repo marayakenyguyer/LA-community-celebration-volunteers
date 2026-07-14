@@ -53,7 +53,7 @@ function FullBleedVideo() {
         frameBorder="0"
         allow="autoplay; encrypted-media; picture-in-picture"
         referrerPolicy="strict-origin-when-cross-origin"
-        style={{ position: "absolute", top: "50%", left: "50%", width: "100vw", height: "56.25vw", minHeight: "100%", minWidth: "177.78vh", transform: "translate(-50%,-50%) scale(1.3)", border: "none", pointerEvents: "none" }}
+        style={{ position: "absolute", top: "50%", left: "50%", width: "100vw", height: "56.25vw", minHeight: "100%", minWidth: "177.78vh", transform: "translate(-50%,-50%)", border: "none", pointerEvents: "none" }}
       ></iframe>
       <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
     </section>
