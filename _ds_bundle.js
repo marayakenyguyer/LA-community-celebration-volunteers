@@ -1,4 +1,4 @@
-/* @ds-bundle: {"format":4,"namespace":"CityVolunteersLA2028DesignSystem_ea1102","components":[{"name":"Avatar","sourcePath":"components/display/Avatar.jsx"},{"name":"Badge","sourcePath":"components/display/Badge.jsx"},{"name":"Card","sourcePath":"components/display/Card.jsx"},{"name":"Stat","sourcePath":"components/display/Stat.jsx"},{"name":"Tag","sourcePath":"components/display/Tag.jsx"},{"name":"Button","sourcePath":"components/forms/Button.jsx"},{"name":"Checkbox","sourcePath":"components/forms/Checkbox.jsx"},{"name":"Input","sourcePath":"components/forms/Input.jsx"},{"name":"Select","sourcePath":"components/forms/Select.jsx"},{"name":"Switch","sourcePath":"components/forms/Switch.jsx"},{"name":"Tabs","sourcePath":"components/navigation/Tabs.jsx"}],"sourceHashes":{"components/display/Avatar.jsx":"fc229cf17496","components/display/Badge.jsx":"b701943039b4","components/display/Card.jsx":"860043b31060","components/display/Stat.jsx":"6efdceb66d13","components/display/Tag.jsx":"3c3e98da3bf3","components/forms/Button.jsx":"2d25f4fe9743","components/forms/Checkbox.jsx":"4a4e3e8312c0","components/forms/Input.jsx":"a44c6372b7ea","components/forms/Select.jsx":"dfc8ce4fd992","components/forms/Switch.jsx":"cd944e73b724","components/navigation/Tabs.jsx":"ef02abdf0d6f","ui_kits/website/App.jsx":"1477d1492a31","ui_kits/website/ApplyScreen.jsx":"f1077ceacdb2","ui_kits/website/FourStepsToJoin.jsx":"859ebcf9624a","ui_kits/website/HomeScreen.jsx":"3463490d3cef","ui_kits/website/HowAreWeDifferent.jsx":"ae09794a4db5","ui_kits/website/Icon.jsx":"940ae1e90017","ui_kits/website/JourneyScreen.jsx":"28ae4d0f6b7d","ui_kits/website/LandingOfficial.jsx":"9ea7bd472f65","ui_kits/website/LandingPhoto.jsx":"de262e5f6175","ui_kits/website/LandingThemed.jsx":"d4e61e50149c","ui_kits/website/RolesScreen.jsx":"ace82902fe21","ui_kits/website/SiteChrome.jsx":"30cb6ab940a1"},"inlinedExternals":[],"unexposedExports":[]} */
+/* @ds-bundle: {"format":4,"namespace":"CityVolunteersLA2028DesignSystem_ea1102","components":[{"name":"Avatar","sourcePath":"components/display/Avatar.jsx"},{"name":"Badge","sourcePath":"components/display/Badge.jsx"},{"name":"Card","sourcePath":"components/display/Card.jsx"},{"name":"Stat","sourcePath":"components/display/Stat.jsx"},{"name":"Tag","sourcePath":"components/display/Tag.jsx"},{"name":"Button","sourcePath":"components/forms/Button.jsx"},{"name":"Checkbox","sourcePath":"components/forms/Checkbox.jsx"},{"name":"Input","sourcePath":"components/forms/Input.jsx"},{"name":"Select","sourcePath":"components/forms/Select.jsx"},{"name":"Switch","sourcePath":"components/forms/Switch.jsx"},{"name":"Tabs","sourcePath":"components/navigation/Tabs.jsx"}],"sourceHashes":{"components/display/Avatar.jsx":"fc229cf17496","components/display/Badge.jsx":"b701943039b4","components/display/Card.jsx":"860043b31060","components/display/Stat.jsx":"6efdceb66d13","components/display/Tag.jsx":"3c3e98da3bf3","components/forms/Button.jsx":"2d25f4fe9743","components/forms/Checkbox.jsx":"4a4e3e8312c0","components/forms/Input.jsx":"a44c6372b7ea","components/forms/Select.jsx":"dfc8ce4fd992","components/forms/Switch.jsx":"cd944e73b724","components/navigation/Tabs.jsx":"ef02abdf0d6f","ui_kits/website/App.jsx":"1477d1492a31","ui_kits/website/ApplyScreen.jsx":"f1077ceacdb2","ui_kits/website/FourStepsToJoin.jsx":"2b01436d8e23","ui_kits/website/HomeScreen.jsx":"3463490d3cef","ui_kits/website/HowAreWeDifferent.jsx":"4c8a0ae6d14c","ui_kits/website/Icon.jsx":"940ae1e90017","ui_kits/website/JourneyScreen.jsx":"28ae4d0f6b7d","ui_kits/website/LandingOfficial.jsx":"9ea7bd472f65","ui_kits/website/LandingPhoto.jsx":"30d7de4bf61c","ui_kits/website/LandingThemed.jsx":"d4e61e50149c","ui_kits/website/RolesScreen.jsx":"ace82902fe21","ui_kits/website/SiteChrome.jsx":"30cb6ab940a1"},"inlinedExternals":[],"unexposedExports":[]} */
 
 (() => {
 
@@ -1312,7 +1312,7 @@ const FSJ_STEPS = [{
 }, {
   n: "03",
   icon: "graduation-cap",
-  color: "var(--coral-600)",
+  color: "#D9481F",
   title: "Selection & Onboarding",
   body: "Selected volunteers get an official offer, then complete training built for their role.",
   date: "Late 2027–early 2028"
@@ -1982,7 +1982,7 @@ const HAWD_DIFF = [{
 }, {
   tag: "LA28",
   title: "Games Volunteers",
-  accent: "var(--gold-700)",
+  accent: "#8A5700",
   points: [{
     icon: "ticket",
     t: "Inside official competition venues and Games operations."
@@ -2119,7 +2119,7 @@ function HowAreWeDifferent({
     }, /*#__PURE__*/React.createElement(Icon, {
       name: pt.icon,
       size: 17,
-      color: c.accent === "var(--gold-500)" ? "var(--ink-900)" : "#fff",
+      color: "#fff",
       stroke: 2.2
     })), /*#__PURE__*/React.createElement("span", {
       style: {
@@ -3472,7 +3472,7 @@ window.LandingOfficial = LandingOfficial;
 try { (() => {
 // City Volunteers LA 2028 — Photo-driven landing (Editorial layout)
 const PDS = window.CityVolunteersLA2028DesignSystem_ea1102;
-const PHOTO = "assets/photos/volunteers-sunset.jpg";
+const PHOTO = "img_7554-mrfbugxu.jpeg";
 
 /* ---- shared content ---- */
 const P_STATS = [{
@@ -3495,7 +3495,7 @@ const P_WHY = [{
   b: "Step into a once-in-a-generation moment for your city."
 }, {
   icon: "graduation-cap",
-  color: "var(--coral-600)",
+  color: "#D9481F",
   h: "Build lasting skills",
   b: "Training that outlasts the closing ceremony."
 }, {
@@ -3505,7 +3505,7 @@ const P_WHY = [{
   b: "Find community and join a network of amazing Angelenos."
 }, {
   icon: "accessibility",
-  color: "var(--green-600)",
+  color: "#1F8A41",
   h: "A Games for All",
   b: "Find meaningful roles for every ability and skill set."
 }];
@@ -3601,9 +3601,8 @@ function PHeader() {
   }))));
 }
 
-/* ---- 1. Full-bleed hero video (no text overlay) ---- */
+/* ---- 1. Full-bleed hero video (autoplay, muted, loop, no controls) ---- */
 function FullBleedVideo() {
-  const [playing, setPlaying] = React.useState(false);
   return /*#__PURE__*/React.createElement("section", {
     style: {
       position: "relative",
@@ -3618,79 +3617,33 @@ function FullBleedVideo() {
       inset: 0,
       backgroundImage: `url(${PHOTO})`,
       backgroundSize: "cover",
-      backgroundPosition: "center 32%"
+      backgroundPosition: "center 60%"
     }
-  }), /*#__PURE__*/React.createElement("div", {
+  }), /*#__PURE__*/React.createElement("iframe", {
+    src: "https://www.youtube-nocookie.com/embed/Bw3qj2MDimQ?autoplay=1&mute=1&loop=1&playlist=Bw3qj2MDimQ&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1&iv_load_policy=3&disablekb=1&fs=0&cc_load_policy=0",
+    title: "City Volunteers 2028 hero video",
+    frameBorder: "0",
+    allow: "autoplay; encrypted-media; picture-in-picture",
+    referrerPolicy: "strict-origin-when-cross-origin",
     style: {
       position: "absolute",
-      inset: 0,
-      background: playing ? "rgba(11,18,48,0.08)" : "rgba(11,18,48,0.32)",
-      transition: "background .3s ease"
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: "absolute",
-      inset: 0,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center"
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => setPlaying(p => !p),
-    "aria-label": playing ? "Pause" : "Play volunteer film",
-    style: {
-      width: 104,
-      height: 104,
-      borderRadius: "50%",
+      top: "50%",
+      left: "50%",
+      width: "100vw",
+      height: "56.25vw",
+      minHeight: "100%",
+      minWidth: "177.78vh",
+      transform: "translate(-50%,-50%) scale(1.3)",
       border: "none",
-      cursor: "pointer",
-      background: "var(--grad-sunset)",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      boxShadow: "0 14px 40px rgba(0,0,0,0.4)"
+      pointerEvents: "none"
     }
-  }, playing ? /*#__PURE__*/React.createElement("svg", {
-    width: "38",
-    height: "38",
-    viewBox: "0 0 24 24",
-    fill: "#fff"
-  }, /*#__PURE__*/React.createElement("rect", {
-    x: "6",
-    y: "5",
-    width: "4",
-    height: "14",
-    rx: "1"
-  }), /*#__PURE__*/React.createElement("rect", {
-    x: "14",
-    y: "5",
-    width: "4",
-    height: "14",
-    rx: "1"
-  })) : /*#__PURE__*/React.createElement("svg", {
-    width: "44",
-    height: "44",
-    viewBox: "0 0 24 24",
-    fill: "#fff"
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14Z"
-  })))), /*#__PURE__*/React.createElement("div", {
+  }), /*#__PURE__*/React.createElement("div", {
     style: {
       position: "absolute",
-      left: 0,
-      right: 0,
-      bottom: 0,
-      height: 5,
-      background: "rgba(255,255,255,0.22)"
+      inset: 0,
+      pointerEvents: "none"
     }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      height: "100%",
-      width: playing ? "100%" : "0%",
-      background: "var(--grad-sunset)",
-      transition: playing ? "width 84s linear" : "width .3s ease"
-    }
-  })));
+  }));
 }
 
 /* ---- 6. Google Form link ---- */
@@ -3842,7 +3795,7 @@ function Intro() {
   return /*#__PURE__*/React.createElement("section", {
     style: {
       background: "var(--surface-page)",
-      padding: "clamp(52px,7vw,96px) clamp(20px,5vw,48px)"
+      padding: "clamp(24px,3.5vw,52px) clamp(20px,5vw,48px)"
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -3881,19 +3834,23 @@ function Intro() {
       boxShadow: "var(--shadow-lg)"
     }
   }, /*#__PURE__*/React.createElement("img", {
-    src: "img_7554-mrfbugxu.jpeg",
+    src: "assets/photos/volunteers-sunset.jpg",
     alt: "City Volunteers crew",
     style: {
       width: "100%",
       display: "block",
       objectFit: "cover",
-      maxHeight: 420
+      objectPosition: "center 30%",
+      maxHeight: 420,
+      paddingBottom: 0,
+      marginBottom: 0
     }
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 1080,
       margin: "0 auto",
-      textAlign: "center"
+      textAlign: "center",
+      marginTop: 8
     }
   }, /*#__PURE__*/React.createElement(Kicker, {
     color: "var(--coral-500)",
@@ -3902,7 +3859,8 @@ function Intro() {
     center: true,
     size: "clamp(2.4rem,5.5vw,4.2rem)",
     style: {
-      fontSize: 48
+      fontSize: 48,
+      marginTop: 15
     }
   }, "JOIN THE 2028 CREW"), /*#__PURE__*/React.createElement("p", {
     style: {

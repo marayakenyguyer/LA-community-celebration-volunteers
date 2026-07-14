@@ -1,0 +1,66 @@
+/* ============================================================
+   City Volunteers LA 2028 — TYPOGRAPHY TOKENS
+   ============================================================ */
+:root {
+  /* ---- Families ------------------------------------------ */
+  --font-display: "Anton", "Arial Narrow", sans-serif;      /* giant condensed caps */
+  --font-sans:    "Archivo", system-ui, -apple-system, sans-serif; /* UI, subheads */
+  --font-text:    "Public Sans", system-ui, sans-serif;     /* long-form reading */
+  --font-mono:    "DM Mono", ui-monospace, "SF Mono", monospace; /* kickers, data */
+
+  /* ---- Fluid display scale (stadium headlines) ----------- */
+  --fs-display-xl: clamp(3.5rem, 9vw, 8rem); /* @kind font */
+  --fs-display-lg: clamp(2.75rem, 6vw, 5rem); /* @kind font */
+  --fs-display-md: clamp(2rem, 4vw, 3.25rem); /* @kind font */
+  --fs-display-sm: clamp(1.6rem, 3vw, 2.25rem); /* @kind font */
+
+  /* ---- Text scale ---------------------------------------- */
+  --fs-h1: 2.5rem;
+  --fs-h2: 2rem;
+  --fs-h3: 1.5rem;
+  --fs-h4: 1.25rem;
+  --fs-lg: 1.125rem;
+  --fs-md: 1rem;
+  --fs-sm: 0.875rem;
+  --fs-xs: 0.75rem;
+
+  /* ---- Weights ------------------------------------------- */
+  --fw-regular: 400; /* @kind font */
+  --fw-medium: 500; /* @kind font */
+  --fw-semibold: 600; /* @kind font */
+  --fw-bold: 700; /* @kind font */
+  --fw-black: 900; /* @kind font */
+
+  /* ---- Line heights -------------------------------------- */
+  --lh-tight: 0.92; /* @kind font */
+  --lh-snug: 1.1; /* @kind font */
+  --lh-normal: 1.5; /* @kind font */
+  --lh-relaxed: 1.65; /* @kind font */
+
+  /* ---- Tracking ------------------------------------------ */
+  --ls-display: -0.01em; /* @kind font */
+  --ls-tight: -0.02em; /* @kind font */
+  --ls-kicker: 0.16em;   /* mono eyebrow labels @kind font */
+  --ls-label: 0.04em; /* @kind font */
+}
+
+/* ---- Convenience roles (optional helper classes) --------- */
+.cv-display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-display);
+  color: var(--text-strong);
+}
+.cv-kicker {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-kicker);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+}
+.cv-body {
+  font-family: var(--font-text);
+  line-height: var(--lh-relaxed);
+  color: var(--text-body);
+}
