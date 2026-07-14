@@ -5,7 +5,7 @@
 const FSJ_STEPS = [
   { n: "01", icon: "sparkles", color: "var(--blue-500)", title: "Application", body: "Tell us who you are and how you'd like to help. About 15 minutes — no experience required.", date: "Opens early 2027" },
   { n: "02", icon: "search", color: "var(--purple-500)", title: "Vetting", body: "We review applications and run a background check once you accept a conditional role offer.", date: "Spring–summer 2027" },
-  { n: "03", icon: "graduation-cap", color: "var(--coral-600)", title: "Selection & Onboarding", body: "Selected volunteers get an official offer, then complete training built for their role.", date: "Late 2027–early 2028" },
+  { n: "03", icon: "graduation-cap", color: "#D9481F", title: "Selection & Onboarding", body: "Selected volunteers get an official offer, then complete training built for their role.", date: "Late 2027–early 2028" },
   { n: "04", icon: "star", color: "var(--gold-500)", title: "Deployment", body: "Pick up your kit and take your post as the face of LA across the city.", date: "Summer 2028" },
 ];
 
