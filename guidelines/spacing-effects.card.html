@@ -1,0 +1,27 @@
+<!-- @dsCard group="Spacing" viewport="700x190" name="Radii & Shadows" subtitle="Soft daylight elevation + the hard sticker pop" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; background: var(--surface-sand); padding: 26px 24px; box-sizing: border-box; font-family: var(--font-mono); }
+  .row { display: flex; gap: 22px; align-items: center; }
+  .box { width: 90px; height: 90px; background: var(--surface-card); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; font-size: 10px; color: var(--text-muted); box-sizing: border-box; }
+  .b-sm { border-radius: var(--radius-sm); box-shadow: var(--shadow-sm); }
+  .b-md { border-radius: var(--radius-md); box-shadow: var(--shadow-md); }
+  .b-lg { border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
+  .b-pop { border-radius: var(--radius-md); border: var(--border-ink); box-shadow: var(--shadow-pop-sm); }
+  .pill { border-radius: var(--radius-pill); width: 120px; height: 44px; align-items: center; background: var(--blue-500); color: #fff; box-shadow: var(--shadow-md); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="box b-sm">sm · soft</div>
+    <div class="box b-md">md</div>
+    <div class="box b-lg">lg</div>
+    <div class="box b-pop">pop</div>
+    <div class="box pill">pill</div>
+  </div>
+</body>
+</html>

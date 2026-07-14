@@ -1,0 +1,38 @@
+<!-- @dsCard group="Brand" viewport="700x230" name="Wordmark" subtitle="Primary lockup — condensed caps + sun-arc mark" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; background: var(--surface-card); display: grid; place-items: center; height: 230px; }
+  .lockup { display: flex; align-items: center; gap: 18px; }
+  .mark {
+    width: 66px; height: 66px; border-radius: 50%;
+    background: var(--grad-sunset);
+    position: relative; flex: none;
+    box-shadow: var(--shadow-md);
+  }
+  .mark::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    background:
+      repeating-conic-gradient(from 200deg, rgba(255,255,255,.55) 0deg 6deg, transparent 6deg 18deg);
+    -webkit-mask: radial-gradient(circle, transparent 40%, #000 41%);
+            mask: radial-gradient(circle, transparent 40%, #000 41%);
+  }
+  .type { line-height: 1; }
+  .l1 { font-family: var(--font-display); text-transform: uppercase; font-size: 38px; letter-spacing: -0.01em; color: var(--ink-900); white-space: nowrap; }
+  .l1 em { font-style: normal; color: var(--blue-500); }
+  .l2 { font-family: var(--font-mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--text-muted); margin-top: 7px; }
+</style>
+</head>
+<body>
+  <div class="lockup">
+    <div class="mark"></div>
+    <div class="type">
+      <div class="l1">CITY <em>VOLUNTEERS</em></div>
+      <div class="l2">Los Angeles · LA 2028</div>
+    </div>
+  </div>
+</body>
+</html>

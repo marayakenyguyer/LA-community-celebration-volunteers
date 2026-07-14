@@ -1,0 +1,35 @@
+<!-- @dsCard group="Brand" viewport="700x220" name="The Sun-Arc Motif" subtitle="Concentric sunset rings — our recurring graphic device" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; height: 220px; background: var(--ink-900); overflow: hidden; position: relative; font-family: var(--font-mono); }
+  .arc {
+    position: absolute; right: -90px; bottom: -200px;
+    width: 560px; height: 560px; border-radius: 50%;
+    background:
+      radial-gradient(circle at center,
+        transparent 0 30%,
+        var(--magenta-500) 30% 38%,
+        var(--coral-500) 38% 46%,
+        var(--gold-500) 46% 54%,
+        var(--green-500) 54% 62%,
+        var(--cyan-400) 62% 70%,
+        var(--blue-500) 70% 78%,
+        transparent 78%);
+  }
+  .cap { position: absolute; left: 26px; top: 24px; color: #fff; max-width: 300px; }
+  .cap .k { color: var(--gold-400); letter-spacing: .16em; text-transform: uppercase; font-size: 11px; }
+  .cap h3 { font-family: var(--font-display); text-transform: uppercase; font-size: 30px; line-height: .95; margin: 8px 0 0; }
+</style>
+</head>
+<body>
+  <div class="arc"></div>
+  <div class="cap">
+    <div class="k">Graphic device</div>
+    <h3>Every shift<br>radiates out</h3>
+  </div>
+</body>
+</html>

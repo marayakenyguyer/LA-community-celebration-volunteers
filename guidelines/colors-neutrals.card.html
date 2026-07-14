@@ -1,0 +1,26 @@
+<!-- @dsCard group="Colors" viewport="700x180" name="Ink & Neutrals" subtitle="Midnight-blue text, hairlines and warm paper" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; font-family: var(--font-mono); background: var(--surface-card); }
+  .row { display: flex; gap: 0; }
+  .sw { flex: 1; height: 140px; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; box-sizing: border-box; }
+  .sw b { font-family: var(--font-sans); font-weight: 800; font-size: 11.5px; display: block; letter-spacing: .02em; }
+  .sw span { font-size: 10.5px; opacity: .8; }
+  .d { color: #fff; } .l { color: var(--ink-900); }
+</style>
+</head>
+<body>
+  <div class="row">
+    <div class="sw d" style="background:var(--ink-900)"><b>INK 900</b><span>#0B1230</span></div>
+    <div class="sw d" style="background:var(--ink-700)"><b>700 · BODY</b><span>#2A3358</span></div>
+    <div class="sw d" style="background:var(--ink-500)"><b>500 · MUTED</b><span>#5A627F</span></div>
+    <div class="sw l" style="background:var(--line-200)"><b>LINE 200</b><span>#D8DCE8</span></div>
+    <div class="sw l" style="background:var(--sand)"><b>SAND</b><span>#F4EEE3</span></div>
+    <div class="sw l" style="background:var(--paper);box-shadow:inset 0 0 0 1px var(--line-200)"><b>PAPER</b><span>#FFF9F2</span></div>
+  </div>
+</body>
+</html>

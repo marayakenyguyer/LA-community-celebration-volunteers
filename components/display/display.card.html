@@ -1,0 +1,64 @@
+<!-- @dsCard group="Components" viewport="700x520" name="Display" subtitle="Stat, Card, Badge, Tag, Avatar" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../../styles.css" />
+<style>
+  body { margin: 0; background: var(--surface-page); padding: 24px; box-sizing: border-box; }
+  .label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 12px; }
+  .sec { margin-bottom: 26px; }
+  .row { display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel">
+  const { Stat, Card, Badge, Tag, Avatar } = window.CityVolunteersLA2028DesignSystem_ea1102;
+  function Demo() {
+    const [sel, setSel] = React.useState("Wayfinding");
+    return (
+      <div>
+        <div className="sec">
+          <p className="label">Stats</p>
+          <div className="row" style={{gap:"48px"}}>
+            <Stat value="5K–10K" label="Volunteers mobilized" gradient />
+            <Stat value="25,000+" label="Total shifts" accent="gold" />
+            <Stat value="15" label="Council districts" accent="magenta" />
+          </div>
+        </div>
+        <div className="sec">
+          <p className="label">Cards</p>
+          <div className="row">
+            <Card eyebrow="Track 1" title="Volunteer Workforce" accent="sunset" interactive style={{width:"230px"}}>
+              Recruit, vet and staff leadership and general roles.
+            </Card>
+            <Card eyebrow="Mission" title="City Guidance" pop style={{width:"230px"}}>
+              Wayfinding and a warm welcome at transit hubs.
+            </Card>
+          </div>
+        </div>
+        <div className="sec">
+          <p className="label">Badges, Tags & Avatars</p>
+          <div className="row" style={{gap:"10px"}}>
+            <Badge tone="green" dot>Open</Badge>
+            <Badge tone="gold" solid>Filling fast</Badge>
+            <Badge tone="purple">Accessibility</Badge>
+            <Tag selected={sel==="Wayfinding"} onClick={()=>setSel("Wayfinding")}>Wayfinding</Tag>
+            <Tag selected={sel==="Hospitality"} onClick={()=>setSel("Hospitality")}>Hospitality</Tag>
+            <Tag onRemove={()=>{}}>San Diego</Tag>
+            <Avatar name="Maya Ortiz" tone="magenta" />
+            <Avatar name="LA Crew" ring />
+          </div>
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+</script>
+</body>
+</html>

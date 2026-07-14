@@ -1,0 +1,29 @@
+<!-- @dsCard group="Brand" viewport="700x230" name="Voice & Tone" subtitle="Warm, civic, direct — we welcome, we never lecture" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../styles.css" />
+<style>
+  body { margin: 0; background: var(--surface-card); padding: 20px 24px; box-sizing: border-box; font-family: var(--font-sans); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cell { border-radius: var(--radius-md); padding: 12px 14px; box-sizing: border-box; }
+  .do { background: var(--blue-100); }
+  .dont { background: #FBE9E9; }
+  .tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 6px; }
+  .do .tag { color: var(--blue-600); }
+  .dont .tag { color: var(--danger); }
+  p.q { font-size: 15px; line-height: 1.4; color: var(--ink-900); margin: 0; font-weight: 600; }
+  .dont p.q { color: var(--ink-700); font-weight: 500; }
+  .dont p.q { text-decoration: line-through; text-decoration-color: rgba(226,56,56,.5); }
+</style>
+</head>
+<body>
+  <div class="grid">
+    <div class="cell do"><p class="tag">We say</p><p class="q">"Neighbors welcoming neighbors. Come be the face of LA."</p></div>
+    <div class="cell dont"><p class="tag">Not</p><p class="q">"Applicants must satisfy all mandatory eligibility criteria."</p></div>
+    <div class="cell do"><p class="tag">We say</p><p class="q">"A Games for All. Your city, your shift, your moment."</p></div>
+    <div class="cell dont"><p class="tag">Not</p><p class="q">"Leverage synergies to maximize volunteer engagement."</p></div>
+  </div>
+</body>
+</html>
